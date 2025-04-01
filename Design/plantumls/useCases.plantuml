@@ -1,13 +1,14 @@
-@startuml usecases
-skinparam Style strictuml 
+@startuml useCases
 actor "Booking Center" as BookingCenter
 actor "Taxi" as Taxi
 
-rectangle System {
+rectangle "Fleet Management Module" {
   BookingCenter --> (List All Taxis) 
   BookingCenter --> (Publish New Booking) 
   BookingCenter --> (View Dashboard)
+}
 
+rectangle "Taxi Module" {
   Taxi --> (Accept Booking) 
   Taxi --> (Update Status)
 }
