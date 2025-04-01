@@ -1,0 +1,45 @@
+@startuml DashboardServiceSequence
+
+actor "Fleet Management Team" as FleetTeam
+
+== Initial UI Rendering ==
+
+FleetTeam -> Dashboard : renderInitialDashboard()
+Dashboard -> DashboardService : generateBookingStats(filters)
+DashboardService -> BookingCenter : queryBooking(filters)
+BookingCenter -> BookingCenter : retrieve filtered bookings
+BookingCenter -> DashboardService : return booking data
+DashboardService -> Dashboard : displayBookingStats(bookingData)
+
+Dashboard -> DashboardService : generateTaxiStats(filters)
+DashboardService -> TaxiFleet : queryTaxis(filters)
+TaxiFleet -> TaxiFleet : retrieve filtered taxis
+TaxiFleet -> CommunicationService : getLocation(taxi)
+note right of CommunicationService : Asynchronous Task \n (using separate threads)
+CommunicationService-> Taxi : getLocation()
+Taxi -> CommunicationService : return location
+CommunicationService -> TaxiFleet : return locations of queried taxis.
+TaxiFleet -> DashboardService : return taxi data with locations
+DashboardService -> Dashboard : displayTaxiStats(taxiData)
+
+== Fleet Management Updates Filters ==
+
+FleetTeam -> Dashboard : updatesFilters(newFilters)
+Dashboard -> DashboardService : generateBookingStats(filters)
+DashboardService -> BookingCenter : queryBooking(filters)
+BookingCenter -> BookingCenter : retrieve filtered bookings
+BookingCenter -> DashboardService : return booking data
+DashboardService -> Dashboard : displayBookingStats(bookingData)
+
+Dashboard -> DashboardService : generateTaxiStats(filters)
+DashboardService -> TaxiFleet : queryTaxis(filters)
+TaxiFleet -> TaxiFleet : retrieve filtered taxis
+TaxiFleet -> CommunicationService : getLocation(taxi)
+note right of CommunicationService : Asynchronous Task \n (using separate threads)
+CommunicationService-> Taxi : getLocation()
+Taxi -> CommunicationService : return location
+CommunicationService -> TaxiFleet : return locations of queried taxis.
+TaxiFleet -> DashboardService : return taxi data with locations
+DashboardService -> Dashboard : displayTaxiStats(taxiData)
+
+@enduml

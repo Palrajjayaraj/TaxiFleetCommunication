@@ -1,0 +1,32 @@
+@startuml userRequestsBooking
+
+actor User
+participant "BookingCenter" as BC
+participant "TaxiFleet" as TF
+participant "CommunicationService" as CS
+participant "Taxi" as Taxi
+
+User -> BC : requestBooking(pickup, dropoff)
+BC -> BC : create BookingRequest
+BC -> TF : AvailableTaxis()
+TF -> TF : searchAvailableTaxis()
+TF -> BC : return AvailableTaxis
+BC -> CS : notifyTaxis(AvailableTaxis, BookingRequest)
+CS -> Taxi : publishBookingRequest(BookingRequest)
+alt No taxis accept the request
+    Taxi -> CS : respondToBooking(REJECT)
+    CS -> BC : handleTaxiResponse(REJECT)
+    loop Handle all taxi responses
+        CS -> BC : handleTaxiResponse(REJECT)
+    end
+    BC -> User : notify("No taxis available")
+else Some taxis accept the request
+    Taxi -> CS : respondToBooking(ACCEPT)
+    CS -> BC : handleTaxiResponse(ACCEPT)
+    loop Handle all taxi responses
+        CS -> BC : handleTaxiResponse(ACCEPT)
+    end
+    BC -> User : notify("Booking confirmed")
+end
+
+@enduml

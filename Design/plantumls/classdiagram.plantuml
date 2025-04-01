@@ -98,6 +98,7 @@ package "Fleet Management" {
     class CommunicationService {
         +publishBookingRequest(request: BookingRequest): void
         +notifyTaxis(taxis: List<Taxi>, bookingRequest: BookingRequest): void
+        +getLocation(taxi:Taxi): Location
     }
 
     class DashboardService {
