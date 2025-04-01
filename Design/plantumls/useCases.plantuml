@@ -1,0 +1,15 @@
+@startuml usecases
+skinparam Style strictuml 
+actor "Booking Center" as BookingCenter
+actor "Taxi" as Taxi
+
+rectangle System {
+  BookingCenter --> (List All Taxis) 
+  BookingCenter --> (Publish New Booking) 
+  BookingCenter --> (View Dashboard)
+
+  Taxi --> (Accept Booking) 
+  Taxi --> (Update Status)
+}
+
+@enduml
