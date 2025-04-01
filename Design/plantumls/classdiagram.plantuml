@@ -100,10 +100,15 @@ package "Fleet Management" {
         +notifyTaxis(taxis: List<Taxi>, bookingRequest: BookingRequest): void
     }
 
+    class DashboardService {
+        +generateBookingStats(filters: Collection<Filter<Booking>>): Collection<Booking>
+        +generateTaxiStats(filters: Collection<Filter<Taxi>>): Collection<Taxi>
+    }
+
     class Dashboard {
-        +renderDashboard(): void
-        +generateBookingStats(bookingFilters: Collection<Filter<Booking>>): Collection<Booking>
-        +generateTaxiStats(taxiFilters: Collection<Filter<Taxi>>): Collection<Taxi>
+        +renderInitialDashboard(): void
+        +displayBookingStats(bookingData: Collection<Booking>): void
+        +displayTaxiStats(taxiData: Collection<Taxi>): void
     }
 }
 
