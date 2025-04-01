@@ -1,16 +1,24 @@
 @startuml useCases
 actor "Booking Center" as BookingCenter
 actor "Taxi" as Taxi
+actor "Passenger" as Passenger
+
+rectangle "Passenger Module" {
+  Passenger --> (Request Ride)
+  Passenger --> (View Booking Status)
+  Passenger --> (Cancel Booking)
+}
 
 rectangle "Fleet Management Module" {
   BookingCenter --> (List All Taxis) 
-  BookingCenter --> (Publish New Booking) 
+  BookingCenter --> (Publish New Booking Request) 
+  BookingCenter --> (Create New Booking)
   BookingCenter --> (View Dashboard)
 }
 
 rectangle "Taxi Module" {
-  Taxi --> (Accept Booking) 
-  Taxi --> (Update Status)
+  Taxi --> (Accept / Decline Booking) 
+  Taxi --> (Update location and Availability)
 }
 
 @enduml
