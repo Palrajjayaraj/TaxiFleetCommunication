@@ -13,8 +13,7 @@ class User {
     +cancelBooking(cancelBooking: BookingRequest): void
 }
 
-package "Booking"{
-
+package "Booking" {
     enum RequestStatus {
         PENDING
         REJECTED
@@ -37,10 +36,10 @@ package "Booking"{
 
     class BookingResponse {
         +id: requestID
-        +response:TaxiResponse
+        +response: TaxiResponse
     }
 
-    enum Status {
+    enum BookingStatus {
         CONFIRMED
         ONGOING
         COMPLETED
@@ -53,13 +52,15 @@ package "Booking"{
         +taxi: Taxi
         +bookingTime: DateTime
         +status: BookingStatus
+        +assignTaxi(taxi: Taxi): void
+        +cancelBooking(): void
     }
 
     BookingRequest "1" --> "0..1" Booking : "Becomes"
 }
 
-package Taxi{
-    enum Status {
+package Taxi {
+    enum TaxiStatus {
         AVAILABLE
         BOOKED
         OFFLINE
@@ -67,26 +68,26 @@ package Taxi{
 
     class Taxi {
         +id: Integer
-        +numberPlate : String
-        +status: Status
-        +publishStatus(): void
+        +numberPlate: String
+        +status: TaxiStatus
+        +updateStatus(): void
         +getCurrentLocation(): Location
-        +respondToBooking(request:BookingRequest): TaxiResponse
+        +respondToBooking(request: BookingRequest): TaxiResponse
     }
 }
 
 package "Fleet Management" {
-    class Filter{
+    class Filter {
         +apply(item: T): Boolean
     }
 
     class BookingCenter {
         +publishBooking(booking: BookingRequest): void
-        +queryBooking(Collection<Filter<Booking>>): Collection<Booking>
+        +queryBooking(filters: Collection<Filter<Booking>>): Collection<Booking>
     }
 
     class TaxiFleet {
-        +queryTaxis(Collection<Filter<Taxi>>): Collection<Taxi>
+        +queryTaxis(filters: Collection<Filter<Taxi>>): Collection<Taxi>
         +getAvailableTaxis(): List<Taxi>
     }
 
