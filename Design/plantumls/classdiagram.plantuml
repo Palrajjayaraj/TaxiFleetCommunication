@@ -49,11 +49,14 @@ package "Booking" {
     class Booking {
         +id: Integer
         +request: BookingRequest
-        +taxi: Taxi
+        +assignedTaxi: Taxi
         +bookingTime: DateTime
         +status: BookingStatus
         +assignTaxi(taxi: Taxi): void
-        +cancelBooking(): void
+        +cancel(): void
+        +complete(): double
+        +calculateFare(): double
+        +updateStatus(newStatus: BookingStatus): void
     }
 
     BookingRequest "1" --> "0..1" Booking : "Becomes"
@@ -84,6 +87,7 @@ package "Fleet Management" {
     class BookingCenter {
         +publishBooking(booking: BookingRequest): void
         +queryBooking(filters: Collection<Filter<Booking>>): Collection<Booking>
+        +handleTaxiResponse(response: BookingResponse): void
     }
 
     class TaxiFleet {
@@ -93,8 +97,13 @@ package "Fleet Management" {
 
     class CommunicationService {
         +publishBookingRequest(request: BookingRequest): void
-        +handleTaxiResponse(response: BookingResponse): void
         +notifyTaxis(taxis: List<Taxi>, bookingRequest: BookingRequest): void
+    }
+
+    class Dashboard {
+        +renderDashboard(): void
+        +generateBookingStats(bookingFilters: Collection<Filter<Booking>>): Collection<Booking>
+        +generateTaxiStats(taxiFilters: Collection<Filter<Taxi>>): Collection<Taxi>
     }
 }
 
