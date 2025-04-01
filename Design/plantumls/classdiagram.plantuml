@@ -1,0 +1,100 @@
+@startuml classDigram
+
+class Location {
+    +latitude: double
+    +longitude: double
+}
+
+class User {
+    +id: Integer
+    +name: String
+    +requestBooking(pickup: Location, dropoff: Location): BookingRequest
+    +viewBookingStatus(request: BookingRequest): void
+    +cancelBooking(cancelBooking: BookingRequest): void
+}
+
+package "Booking"{
+
+    enum RequestStatus {
+        PENDING
+        REJECTED
+        EXPIRED
+    }
+
+    enum TaxiResponse {
+        ACCEPT
+        DECLINE
+    }
+
+    class BookingRequest {
+        +id: Integer
+        +user: User
+        +pickupLocation: Location
+        +dropoffLocation: Location
+        +requestTime: DateTime
+        +status: RequestStatus
+    }
+
+    class BookingResponse {
+        +id: requestID
+        +response:TaxiResponse
+    }
+
+    enum Status {
+        CONFIRMED
+        ONGOING
+        COMPLETED
+        CANCELLED
+    }
+
+    class Booking {
+        +id: Integer
+        +request: BookingRequest
+        +taxi: Taxi
+        +bookingTime: DateTime
+        +status: BookingStatus
+    }
+
+    BookingRequest "1" --> "0..1" Booking : "Becomes"
+}
+
+package Taxi{
+    enum Status {
+        AVAILABLE
+        BOOKED
+        OFFLINE
+    }
+
+    class Taxi {
+        +id: Integer
+        +numberPlate : String
+        +status: Status
+        +publishStatus(): void
+        +getCurrentLocation(): Location
+        +respondToBooking(request:BookingRequest): TaxiResponse
+    }
+}
+
+package "Fleet Management" {
+    class Filter{
+        +apply(item: T): Boolean
+    }
+
+    class BookingCenter {
+        +publishBooking(booking: BookingRequest): void
+        +queryBooking(Collection<Filter<Booking>>): Collection<Booking>
+    }
+
+    class TaxiFleet {
+        +queryTaxis(Collection<Filter<Taxi>>): Collection<Taxi>
+        +getAvailableTaxis(): List<Taxi>
+    }
+
+    class CommunicationService {
+        +publishBookingRequest(request: BookingRequest): void
+        +handleTaxiResponse(response: BookingResponse): void
+        +notifyTaxis(taxis: List<Taxi>, bookingRequest: BookingRequest): void
+    }
+}
+
+@enduml
