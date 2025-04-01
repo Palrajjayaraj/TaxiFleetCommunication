@@ -1,0 +1,29 @@
+TASK:
+
+You are requested to build the software that implements the communication for a taxi fleet company.
+
+Each taxi runs a software agent capable of exchanging messages with other taxis and the booking center.
+
+The system shall be able to implement the following capabilities:
+
+1.	List all taxis with their status and their current location.
+2.	Publish a new booking to all available taxis.
+3.	Allow taxis to set their state (available or booked).
+4.	Implement a dashboard or statistics regarding the bookings.
+
+EXPECTATIONS:
+
+•	Use it is as an opportunity to demonstrate your skills.
+•	Use as many hours as you feel is needed for demonstrating your capabilities, its ok if some functionality is missing as long as our expectations are covered.
+•	We expect you to use personal judgment on how much time you need to spend and which technologies to use.
+•	While you are free to use any framework or libraries, please bare in mind that the purpose of the test is to show good programming principles like proper object oriented design and software patterns. Excessive usage of frameworks and annotations may prevent you from doing so.
+•	We appreciate well structured, clean and comprehensible code.
+•	We would like to see usage of software patterns and proper Object-Oriented implementations wherever applicable.
+•	You will definitely get extra credits if you provide proper documentation and UML diagrams.
+•	We don’t want to spend more than 5 minutes just for running your code. Use containerization and README.
+•	Make sure your code is thoroughly covered by meaningful unit tests.
+
+REFLECTION:
+
+•	What aspect of this exercise did you find most interesting?
+•	What did you find most cumbersome?
