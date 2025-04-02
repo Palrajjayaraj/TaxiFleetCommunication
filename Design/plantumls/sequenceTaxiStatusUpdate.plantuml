@@ -1,0 +1,29 @@
+@startuml TaxiStatusUpdateSequence
+
+actor "Taxi" as Taxi
+participant "CommunicationService" as CS
+participant "TaxiFleet" as TF
+participant "PersistenceService" as PS
+actor "Fleet Management Team" as FleetTeam
+
+== Taxi Updates Status ==
+
+Taxi -> CS : publishStatus(newStatus)
+CS -> TF : updateTaxiStatus(taxiId, newStatus)
+TF -> PS : persistTaxiStatus(taxiId, newStatus)
+PS -> TF : confirm persistence
+TF -> CS : confirm update
+CS -> Taxi : acknowledge status update
+
+== Taxi Fleet System Periodically Queries Taxi Status ==
+
+loop Periodic Taxi Status Update
+    TF -> CS : getTaxiStatus()
+    CS -> Taxi : getStatus()
+    Taxi -> CS : returnStatus(currentStatus)
+    CS -> TF : updateTaxiStatus(taxi)
+    TF -> PS : updateTaxiStatus(taxi)
+    PS -> TF : confirm persistence
+end
+
+@enduml

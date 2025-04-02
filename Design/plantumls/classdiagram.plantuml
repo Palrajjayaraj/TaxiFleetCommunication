@@ -66,6 +66,7 @@ package Taxi {
     enum TaxiStatus {
         AVAILABLE
         BOOKED
+        BOOKED_OFFLINE
         OFFLINE
     }
 
@@ -93,12 +94,14 @@ package "Fleet Management" {
     class TaxiFleet {
         +queryTaxis(filters: Collection<Filter<Taxi>>): Collection<Taxi>
         +getAvailableTaxis(): List<Taxi>
+        +updateTaxiStatus(taxi: Taxi): void
     }
 
     class CommunicationService {
         +publishBookingRequest(request: BookingRequest): void
         +notifyTaxis(taxis: List<Taxi>, bookingRequest: BookingRequest): void
         +getLocation(taxi:Taxi): Location
+        +getTaxiStatus(taxi: Taxi): TaxiStatus
     }
 
     class DashboardService {
@@ -110,6 +113,16 @@ package "Fleet Management" {
         +renderInitialDashboard(): void
         +displayBookingStats(bookingData: Collection<Booking>): void
         +displayTaxiStats(taxiData: Collection<Taxi>): void
+    }
+
+    class PersistenceService {
+        +saveBookingRequest(request: BookingRequest): void
+        +getBookingRequests(filters: Collection<Filter<BookingRequest>>): Collection<BookingRequest>
+        +saveBooking(booking: Booking): void
+        +getBookings(filters: Collection<Filter<Booking>>): Collection<Booking>
+        +saveTaxi(taxi: Taxi): void
+        +updateTaxiStatus(taxi: Taxi): void
+        +getTaxis(filters: Collection<Filter<Taxi>>): Collection<Taxi>
     }
 }
 

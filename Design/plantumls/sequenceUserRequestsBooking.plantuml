@@ -5,11 +5,15 @@ participant "BookingCenter" as BC
 participant "TaxiFleet" as TF
 participant "CommunicationService" as CS
 participant "Taxi" as Taxi
+participant "PersistenceService" as PS
 
 User -> BC : requestBooking(pickup, dropoff)
 BC -> BC : create BookingRequest
+BC -> PS : save(BookingRequest)
+note right of BC : Asynchronous Task
 BC -> TF : AvailableTaxis()
-TF -> TF : searchAvailableTaxis()
+TF -> PS : retrieveAvailableTaxis()
+PS -> TF : return AvailableTaxis
 TF -> BC : return AvailableTaxis
 BC -> CS : notifyTaxis(AvailableTaxis, BookingRequest)
 CS -> Taxi : publishBookingRequest(BookingRequest)
@@ -25,6 +29,9 @@ else Some taxis accept the request
     CS -> BC : handleTaxiResponse(ACCEPT)
     loop Handle all taxi responses
         CS -> BC : handleTaxiResponse(ACCEPT)
+        BC -> BC : createBooking
+        BC -> PS : saveBooking(Booking)
+        note right of BC : Asynchronous Task
     end
     BC -> User : notify("Booking confirmed")
 end
