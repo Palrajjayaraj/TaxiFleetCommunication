@@ -1,0 +1,6 @@
+1. should this be a web project or multiple standalone projects?
+    Decision: Multiple standalone project, as that would eliminate 
+    the need for web frameworks and developing web UI interfaces, 
+    we can develop java based UI itself and making us focus on java only.
+2. How to simulate the user, taxi, fleet management in real time in a single PC?
+    In the original application, we can decide to give a simulate button to simuate initial conditions.
