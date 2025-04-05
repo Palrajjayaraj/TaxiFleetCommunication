@@ -33,9 +33,9 @@ public class BookingRequest {
 		ASSIGNED_TAXI;
 	}
 
-	private final String uuid;
+	private final UUID uuid;
 
-	private final String userId;
+	private final UUID userId;
 
 	private final LocalDateTime requestTime;
 
@@ -48,9 +48,8 @@ public class BookingRequest {
 	/** Runner to prtcted status information */
 	private final LockRunner statusLockRunner = new LockRunner(new ReentrantReadWriteLock());
 
-	private BookingRequest(String userId, LocalDateTime requestTime, Location pickupLocation,
-			Location dropoffLocation) {
-		this.uuid = UUID.randomUUID().toString();
+	private BookingRequest(UUID userId, LocalDateTime requestTime, Location pickupLocation, Location dropoffLocation) {
+		this.uuid = UUID.randomUUID();
 		this.status = Status.PENDING;
 		this.userId = userId;
 		this.requestTime = requestTime;
@@ -58,13 +57,13 @@ public class BookingRequest {
 		this.dropoffLocation = dropoffLocation;
 	}
 
-	public static BookingRequest createRequest(String userId, LocalDateTime bookingTime, Location pickupLocation,
+	public static BookingRequest createRequest(UUID userId, LocalDateTime bookingTime, Location pickupLocation,
 			Location dropoffLocation) throws TaxiFleetException {
 		assertInputArguments(userId, bookingTime, pickupLocation, dropoffLocation);
 		return new BookingRequest(userId, bookingTime, pickupLocation, dropoffLocation);
 	}
 
-	private static void assertInputArguments(String userId, LocalDateTime bookingTime, Location pickupLocation,
+	private static void assertInputArguments(UUID userId, LocalDateTime bookingTime, Location pickupLocation,
 			Location dropoffLocation) throws TaxiFleetException {
 		Objects.requireNonNull(userId);
 		Objects.requireNonNull(bookingTime);
@@ -84,11 +83,11 @@ public class BookingRequest {
 		}
 	}
 
-	public String getUuid() {
+	public UUID getUuid() {
 		return uuid;
 	}
 
-	public String getUserId() {
+	public UUID getUserId() {
 		return userId;
 	}
 

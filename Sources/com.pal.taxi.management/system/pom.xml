@@ -7,4 +7,16 @@
   </parent>
   <artifactId>system</artifactId>
   <description>The taxi fleet management system itself</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>com.pal.taxi</groupId>
+  		<artifactId>common</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  	<dependency>
+  		<groupId>com.pal.taxi</groupId>
+  		<artifactId>taxi</artifactId>
+  		<version>0.0.1-SNAPSHOT</version>
+  	</dependency>
+  </dependencies>
 </project>

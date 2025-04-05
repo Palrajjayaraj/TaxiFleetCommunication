@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,9 +27,11 @@ public class BookingTest {
 
 	private final Location dropoff = new Location(2, 12.9352, 77.6146, "Bus Terminal");
 
+	private final UUID userID = UUID.randomUUID();
+
 	@Test
 	public void testCreateBookingSuccess() throws TaxiFleetException {
-		BookingRequest request = BookingRequest.createRequest("user123", LocalDateTime.now(), pickup, dropoff);
+		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
 		ITaxiInfo taxi = Mockito.mock(ITaxiInfo.class);
 		LocalDateTime confirmTime = LocalDateTime.now();
 
@@ -44,7 +47,7 @@ public class BookingTest {
 
 	@Test
 	public void testStartRideSuccess() throws TaxiFleetException {
-		BookingRequest request = BookingRequest.createRequest("user123", LocalDateTime.now(), pickup, dropoff);
+		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
 		ITaxiInfo taxi = Mockito.mock(ITaxiInfo.class);
 		LocalDateTime confirmTime = LocalDateTime.now();
 		Booking booking = Booking.createBooking(request, taxi, confirmTime);
@@ -58,7 +61,7 @@ public class BookingTest {
 
 	@Test
 	public void testCompleteRideSuccess() throws TaxiFleetException {
-		BookingRequest request = BookingRequest.createRequest("user123", LocalDateTime.now(), pickup, dropoff);
+		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
 		ITaxiInfo taxi = Mockito.mock(ITaxiInfo.class);
 		LocalDateTime confirmTime = LocalDateTime.now();
 		Booking booking = Booking.createBooking(request, taxi, confirmTime);
@@ -73,7 +76,7 @@ public class BookingTest {
 
 	@Test
 	public void testCancelRideSuccess() throws TaxiFleetException {
-		BookingRequest request = BookingRequest.createRequest("user123", LocalDateTime.now(), pickup, dropoff);
+		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
 		ITaxiInfo taxi = Mockito.mock(ITaxiInfo.class);
 		LocalDateTime confirmTime = LocalDateTime.now();
 		Booking booking = Booking.createBooking(request, taxi, confirmTime);
@@ -95,14 +98,14 @@ public class BookingTest {
 
 	@Test(expected = NullPointerException.class)
 	public void testCreateBookingWithNullTaxi() throws TaxiFleetException {
-		BookingRequest request = BookingRequest.createRequest("user123", LocalDateTime.now(), pickup, dropoff);
+		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
 		LocalDateTime confirmTime = LocalDateTime.now();
 		Booking.createBooking(request, null, confirmTime);
 	}
 
 	@Test(expected = NullPointerException.class)
 	public void testCreateBookingWithNullConfirmationTime() throws TaxiFleetException {
-		BookingRequest request = BookingRequest.createRequest("user123", LocalDateTime.now(), pickup, dropoff);
+		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
 		ITaxiInfo taxi = Mockito.mock(ITaxiInfo.class);
 		Booking.createBooking(request, taxi, null);
 	}
@@ -112,7 +115,7 @@ public class BookingTest {
 
 	@Test
 	public void testStartRideWhenAlreadyInProgress() throws TaxiFleetException {
-		BookingRequest request = BookingRequest.createRequest("user123", LocalDateTime.now(), pickup, dropoff);
+		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
 		ITaxiInfo taxi = Mockito.mock(ITaxiInfo.class);
 		LocalDateTime confirmTime = LocalDateTime.now();
 		Booking booking = Booking.createBooking(request, taxi, confirmTime);
@@ -126,7 +129,7 @@ public class BookingTest {
 
 	@Test
 	public void testUpdateStatusToNullFails() throws TaxiFleetException {
-		BookingRequest request = BookingRequest.createRequest("user123", LocalDateTime.now(), pickup, dropoff);
+		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
 		ITaxiInfo taxi = Mockito.mock(ITaxiInfo.class);
 		LocalDateTime confirmTime = LocalDateTime.now();
 		Booking booking = Booking.createBooking(request, taxi, confirmTime);
@@ -138,7 +141,7 @@ public class BookingTest {
 
 	@Test
 	public void testUpdateStatusAfterCompletedFails() throws TaxiFleetException {
-		BookingRequest request = BookingRequest.createRequest("user123", LocalDateTime.now(), pickup, dropoff);
+		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
 		ITaxiInfo taxi = Mockito.mock(ITaxiInfo.class);
 		LocalDateTime confirmTime = LocalDateTime.now();
 		Booking booking = Booking.createBooking(request, taxi, confirmTime);
@@ -153,7 +156,7 @@ public class BookingTest {
 
 	@Test
 	public void testCancelAfterCompletionFails() throws TaxiFleetException {
-		BookingRequest request = BookingRequest.createRequest("user123", LocalDateTime.now(), pickup, dropoff);
+		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
 		ITaxiInfo taxi = Mockito.mock(ITaxiInfo.class);
 		LocalDateTime confirmTime = LocalDateTime.now();
 		Booking booking = Booking.createBooking(request, taxi, confirmTime);

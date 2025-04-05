@@ -52,6 +52,7 @@ package "Booking" {
         +assignedTaxi: Taxi
         +bookingTime: DateTime
         +status: BookingStatus
+        
         +assignTaxi(taxi: Taxi): void
         +cancel(): void
         +complete(): double
@@ -66,7 +67,7 @@ package Taxi {
     enum TaxiStatus {
         AVAILABLE
         BOOKED
-        BOOKED_OFFLINE
+        RIDING
         OFFLINE
     }
 
@@ -76,7 +77,7 @@ package Taxi {
         +status: TaxiStatus
         +updateStatus(): void
         +getCurrentLocation(): Location
-        +respondToBooking(request: BookingRequest): TaxiResponse
+        +respondToBooking(request: BookingRequest): BookingResponse
     }
 }
 
