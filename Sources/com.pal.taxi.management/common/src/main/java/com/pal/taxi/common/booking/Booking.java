@@ -41,6 +41,9 @@ public class Booking {
 
 	private Status status;
 
+	/**
+	 * Should be createable by only the Booking Request class.
+	 */
 	public static Booking createBooking(BookingRequest request, ITaxiInfo assignedTaxi,
 			LocalDateTime bookingConfirmationTime) throws TaxiFleetException {
 		assertInputArguments(request, assignedTaxi, bookingConfirmationTime);
@@ -102,10 +105,12 @@ public class Booking {
 		ensureBookingNotInProgress();
 		ensureBookingNotClosed();
 		this.status = Status.IN_PROGRESS;
+		this.ride = Ride.createRideRide(this, LocalDateTime.now());
 	}
 
 	public void completeRide() throws TaxiFleetException {
 		ensureBookingNotClosed();
+		this.ride.closeRide();
 		this.status = Status.COMPLETED;
 	}
 
@@ -118,5 +123,15 @@ public class Booking {
 	public Status getStatus() {
 		return status;
 	}
+
+	/**
+	 * @return Could be {@code null}, if the booking is not yet started or
+	 *         cancelled.
+	 */
+	public Ride getRide() {
+		return ride;
+	}
+
+	private Ride ride;
 
 }

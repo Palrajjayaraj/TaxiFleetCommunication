@@ -3,9 +3,11 @@ package com.pal.taxi.common.booking;
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import com.pal.taxi.common.Location;
 import com.pal.taxi.common.TaxiFleetException;
+import com.pal.taxi.common.lock.LockRunner;
 import com.pal.taxi.common.validation.ValidationException;
 import com.pal.taxi.common.validation.ValidationStatus;
 
@@ -43,6 +45,9 @@ public class BookingRequest {
 
 	private Status status;
 
+	/** Runner to prtcted status information */
+	private final LockRunner statusLockRunner = new LockRunner(new ReentrantReadWriteLock());
+
 	private BookingRequest(String userId, LocalDateTime requestTime, Location pickupLocation,
 			Location dropoffLocation) {
 		this.uuid = UUID.randomUUID().toString();
@@ -67,6 +72,9 @@ public class BookingRequest {
 		Objects.requireNonNull(dropoffLocation);
 		assertLocation(pickupLocation);
 		assertLocation(dropoffLocation);
+		if (pickupLocation.equals(dropoffLocation)) {
+			throw new ValidationException("The pickup location and drop off location cannot be same.", null);
+		}
 	}
 
 	private static void assertLocation(Location location) throws TaxiFleetException {
@@ -97,7 +105,7 @@ public class BookingRequest {
 	}
 
 	public Status getStatus() {
-		return status;
+		return statusLockRunner.runWithReadLock(() -> status);
 	}
 
 	/**
@@ -108,13 +116,15 @@ public class BookingRequest {
 	 *                            closed.
 	 */
 	public void updateStatus(Status status) throws TaxiFleetException {
-		if (null == status) {
-			throw new TaxiFleetException("Status cannot be set to null. provide valid status");
-		}
-		if (Status.ASSIGNED_TAXI.equals(getStatus()) || Status.REJECTED.equals(getStatus())) {
-			throw new TaxiFleetException("The request is already closed and cannot set any more status.");
-		}
-		this.status = status;
+		statusLockRunner.runWithWriteLock(() -> {
+			if (null == status) {
+				throw new TaxiFleetException("Status cannot be set to null. provide valid status");
+			}
+			if (Status.ASSIGNED_TAXI.equals(getStatus()) || Status.REJECTED.equals(getStatus())) {
+				throw new TaxiFleetException("The request is already closed and cannot set any more status.");
+			}
+			this.status = status;
+		});
 	}
 
 	@Override

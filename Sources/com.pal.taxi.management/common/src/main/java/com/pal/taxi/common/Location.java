@@ -17,6 +17,12 @@ public record Location(int id, double latitude, double longitude, String readabl
 	public ValidationStatus validate() {
 		// feature for location validation, currently, doing nothing, all locations are
 		// considered valid.
+		if (latitude < -90.0 || latitude > 90.0) {
+			return ValidationStatus.createErrorStatus("Latitude should be within range.", null);
+		}
+		if (longitude < -180.0 || longitude > 180.0) {
+			return ValidationStatus.createErrorStatus("Longitute should be within range.", null);
+		}
 		return ValidationStatus.OK_STATUS;
 	}
 

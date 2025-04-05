@@ -19,4 +19,8 @@ public record ValidationStatus(Severity severity, String message, Throwable thro
 		OK;
 	}
 
+	public static ValidationStatus createErrorStatus(String message, Throwable throwable) {
+		return new ValidationStatus(Severity.ERROR, message, throwable);
+	}
+
 }
