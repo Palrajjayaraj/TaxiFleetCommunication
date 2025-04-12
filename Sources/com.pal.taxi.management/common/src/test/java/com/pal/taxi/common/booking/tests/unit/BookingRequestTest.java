@@ -2,13 +2,12 @@ package com.pal.taxi.common.booking.tests.unit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 
 import com.pal.taxi.common.Location;
 import com.pal.taxi.common.TaxiFleetException;
@@ -26,9 +25,6 @@ public class BookingRequestTest {
 	private final Location validDropoff = new Location(2, 12.9352, 77.6142, "Bus Terminal");
 
 	private final UUID userID = UUID.randomUUID();
-
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
 
 	@Test
 	public void testCreateValidBookingRequest() throws TaxiFleetException {
@@ -59,61 +55,56 @@ public class BookingRequestTest {
 
 	@Test
 	public void testNullUserIdThrowsException() throws TaxiFleetException {
-		thrown.expect(NullPointerException.class);
-		BookingRequest.createRequest(null, LocalDateTime.now(), validPickup, validDropoff);
+		assertThrows(NullPointerException.class,
+				() -> BookingRequest.createRequest(null, LocalDateTime.now(), validPickup, validDropoff));
 	}
 
 	@Test
 	public void testNullPickupLocationThrowsException() throws TaxiFleetException {
-		thrown.expect(NullPointerException.class);
-		BookingRequest.createRequest(userID, LocalDateTime.now(), null, validDropoff);
+		assertThrows(NullPointerException.class,
+				() -> BookingRequest.createRequest(userID, LocalDateTime.now(), null, validDropoff));
 	}
 
 	@Test
 	public void testNullDropoffLocationFails() throws TaxiFleetException {
-		thrown.expect(NullPointerException.class);
-		BookingRequest.createRequest(userID, LocalDateTime.now(), validPickup, null);
+		assertThrows(NullPointerException.class,
+				() -> BookingRequest.createRequest(userID, LocalDateTime.now(), validPickup, null));
 	}
 
 	@Test
 	public void testInvalidPickupLocationFails() throws TaxiFleetException {
 		Location invalidLocation = new Location(3, 100.0, 77.5946, "Invalid Latitude");
-		thrown.expect(ValidationException.class);
-		thrown.expectMessage("Latitude should be within range.");
-		BookingRequest.createRequest(userID, LocalDateTime.now(), invalidLocation, validDropoff);
+		assertThrows("Latitude should be within range.", ValidationException.class,
+				() -> BookingRequest.createRequest(userID, LocalDateTime.now(), invalidLocation, validDropoff));
 	}
 
 	@Test
 	public void testSamePickupAndDropoffFails() throws TaxiFleetException {
 		Location sameLocation = new Location(4, 12.9716, 77.5946, "Same Point");
-		thrown.expect(ValidationException.class);
-		thrown.expectMessage("The pickup location and drop off location cannot be same.");
-		BookingRequest.createRequest(userID, LocalDateTime.now(), sameLocation, sameLocation);
+		assertThrows("The pickup location and drop off location cannot be same.", ValidationException.class,
+				() -> BookingRequest.createRequest(userID, LocalDateTime.now(), sameLocation, sameLocation));
 	}
 
 	@Test
 	public void testUpdateStatusToNullFails() throws TaxiFleetException {
 		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), validPickup, validDropoff);
-		thrown.expect(TaxiFleetException.class);
-		thrown.expectMessage("Status cannot be set to null. provide valid status");
-		request.updateStatus(null);
+		assertThrows("Status cannot be set to null. provide valid status", TaxiFleetException.class,
+				() -> request.updateStatus(null));
 	}
 
 	@Test
 	public void testUpdateStatusAfterRejectionFails() throws TaxiFleetException {
 		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), validPickup, validDropoff);
 		request.updateStatus(Status.REJECTED);
-		thrown.expect(TaxiFleetException.class);
-		thrown.expectMessage("The request is already closed and cannot set any more status.");
-		request.updateStatus(Status.ASSIGNED_TAXI);
+		assertThrows("The request is already closed and cannot set any more status.", TaxiFleetException.class,
+				() -> request.updateStatus(Status.ASSIGNED_TAXI));
 	}
 
 	@Test
 	public void testUpdateStatusAfterAssigningTaxiFails() throws TaxiFleetException {
 		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), validPickup, validDropoff);
 		request.updateStatus(Status.ASSIGNED_TAXI);
-		thrown.expect(TaxiFleetException.class);
-		thrown.expectMessage("The request is already closed and cannot set any more status.");
-		request.updateStatus(Status.REJECTED);
+		assertThrows("The request is already closed and cannot set any more status.", TaxiFleetException.class,
+				() -> request.updateStatus(Status.REJECTED));
 	}
 }

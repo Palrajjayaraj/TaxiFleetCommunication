@@ -3,13 +3,12 @@ package com.pal.taxi.common.booking.tests.unit;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThrows;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mockito;
 
 import com.pal.taxi.common.ITaxiInfo;
@@ -110,9 +109,6 @@ public class BookingTest {
 		Booking.createBooking(request, taxi, null);
 	}
 
-	@Rule
-	public ExpectedException thrown = ExpectedException.none();
-
 	@Test
 	public void testStartRideWhenAlreadyInProgress() throws TaxiFleetException {
 		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), pickup, dropoff);
@@ -122,9 +118,7 @@ public class BookingTest {
 
 		booking.startRide();
 
-		thrown.expect(TaxiFleetException.class);
-		thrown.expectMessage("The booking is already in-progress.");
-		booking.startRide();
+		assertThrows("The booking is already in-progress.", TaxiFleetException.class, () -> booking.startRide());
 	}
 
 	@Test
@@ -134,9 +128,8 @@ public class BookingTest {
 		LocalDateTime confirmTime = LocalDateTime.now();
 		Booking booking = Booking.createBooking(request, taxi, confirmTime);
 
-		thrown.expect(TaxiFleetException.class);
-		thrown.expectMessage("Status cannot be set to null. provide valid status");
-		booking.updateStatus(null);
+		assertThrows("Status cannot be set to null. provide valid status", TaxiFleetException.class,
+				() -> booking.updateStatus(null));
 	}
 
 	@Test
@@ -149,9 +142,8 @@ public class BookingTest {
 		booking.startRide();
 		booking.completeRide();
 
-		thrown.expect(TaxiFleetException.class);
-		thrown.expectMessage("The booking is already closed and cannot set any more status.");
-		booking.updateStatus(Booking.Status.CANCELLED);
+		assertThrows("The booking is already closed and cannot set any more status.", TaxiFleetException.class,
+				() -> booking.updateStatus(Booking.Status.CANCELLED));
 	}
 
 	@Test
@@ -164,9 +156,8 @@ public class BookingTest {
 		booking.startRide();
 		booking.completeRide();
 
-		thrown.expect(TaxiFleetException.class);
-		thrown.expectMessage("The booking is already closed and cannot set any more status.");
-		booking.cancelRide();
+		assertThrows("The booking is already closed and cannot set any more status.", TaxiFleetException.class,
+				() -> booking.cancelRide());
 	}
 
 }
