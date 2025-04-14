@@ -4,3 +4,7 @@
     we can develop java based UI itself and making us focus on java only.
 2. How to simulate the user, taxi, fleet management in real time in a single PC?
     In the original application, we can decide to give a simulate button to simuate initial conditions.
+3. Do we require DB?
+    yeah, it is better to have a persistence system.
+4. Which way to use to connect to DB? JDBC, Hibernate or Spring JPA.
+    Hibernate - as it provides automatic conversion from DB to POJO and our's is a very simple application. This should be sufficient.

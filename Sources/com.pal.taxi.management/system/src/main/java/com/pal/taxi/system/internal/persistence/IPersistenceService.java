@@ -1,10 +1,11 @@
 package com.pal.taxi.system.internal.persistence;
 
-import com.pal.taxi.Taxi;
 import java.util.Collection;
 
+import com.pal.taxi.Taxi;
 import com.pal.taxi.common.booking.Booking;
 import com.pal.taxi.common.booking.BookingRequest;
+import com.pal.taxi.system.filter.IFilter;
 
 public interface IPersistenceService {
 

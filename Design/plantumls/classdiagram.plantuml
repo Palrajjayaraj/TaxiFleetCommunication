@@ -11,7 +11,7 @@ class User {
     +requestBooking(pickup: Location, dropoff: Location): BookingRequest
     +viewBookingStatus(request: BookingRequest): void
     +cancelBooking(cancelBooking: BookingRequest): void
-}
+} 
 
 package "Booking" {
     enum RequestStatus {
@@ -82,7 +82,7 @@ package Taxi {
 }
 
 package "Fleet Management" {
-    class Filter {
+    interface Filter {
         +apply(item: T): Boolean
     }
 
@@ -116,7 +116,7 @@ package "Fleet Management" {
         +displayTaxiStats(taxiData: Collection<Taxi>): void
     }
 
-    class PersistenceService {
+    interface IPersistenceService {
         +saveBookingRequest(request: BookingRequest): void
         +getBookingRequests(filters: Collection<Filter<BookingRequest>>): Collection<BookingRequest>
         +saveBooking(booking: Booking): void

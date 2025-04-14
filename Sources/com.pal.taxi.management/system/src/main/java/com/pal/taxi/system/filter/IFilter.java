@@ -1,5 +1,8 @@
-package com.pal.taxi.system.internal.persistence;
+package com.pal.taxi.system.filter;
 
-public interface IFilter<T> {
+import java.util.function.Predicate;
+
+/**Filter needs to be applied while filtering*/
+public interface IFilter<T> extends Predicate<T>{
 
 }

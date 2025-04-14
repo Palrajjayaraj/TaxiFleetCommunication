@@ -11,6 +11,7 @@
   	<module>user</module>
   	<module>taxi</module>
   	<module>system</module>
+  	<module>persistence</module>
   </modules>
     <properties>
     <maven.compiler.source>21</maven.compiler.source>
