@@ -18,6 +18,10 @@ public class ValidationException extends TaxiFleetException {
 		super(message, exception);
 	}
 
+	public ValidationException(String message) {
+		super(message, null);
+	}
+
 	private static final long serialVersionUID = 8201167829523607623L;
 
 }

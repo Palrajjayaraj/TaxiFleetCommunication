@@ -9,8 +9,8 @@ import com.pal.taxi.common.validation.ValidationStatus;
 
 import lombok.NonNull;
 
-//the changing state of taxi
-/*Package*/ class TaxiState {
+/** the changing state of taxi */
+public class TaxiState {
 
 	private TaxiStatus status;
 

@@ -11,7 +11,7 @@ import lombok.NonNull;
 
 public final class Taxi implements ITaxiInfo {
 
-	enum TaxiStatus {
+	public enum TaxiStatus {
 		AVAILABLE, BOOKED, RIDING, OFFLINE;
 	}
 

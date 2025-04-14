@@ -12,6 +12,7 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import com.pal.taxi.persistence.entities.AppliationInitializationEntity;
+import com.pal.taxi.persistence.entities.LocationEntity;
 import com.pal.taxi.persistence.entities.UserEntity;
 import com.pal.taxi.persistence.internal.init.DataInitializer;
 
@@ -42,13 +43,16 @@ public class HibernateUtil {
 		try {
 			Configuration config = new Configuration();
 			Properties settings = new Properties();
-			File propertyFile = Paths.get("src", "main", "resources", "application.properties").toFile();
+			// if we dont go a step back and go again into persistence, when it is loaded from web-app
+			// it is trying to search for data in the web-app resources folder.
+			File propertyFile = Paths.get("..","persistence","src", "main", "resources", "hibernate.properties").toFile();
 			try (FileInputStream reader = new FileInputStream(propertyFile)) {
 				settings.load(reader);
 			}
 			config.setProperties(settings);
 			config.addAnnotatedClass(UserEntity.class);
 			config.addAnnotatedClass(AppliationInitializationEntity.class);
+			config.addAnnotatedClass(LocationEntity.class);
 			ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(config.getProperties())
 					.build();
 			return config.buildSessionFactory(serviceRegistry);

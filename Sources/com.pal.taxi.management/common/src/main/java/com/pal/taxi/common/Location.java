@@ -8,7 +8,7 @@ import com.pal.taxi.common.validation.ValidationStatus;
  *
  * @author Palraj
  */
-public record Location(int id, double latitude, double longitude, String readableName) {
+public record Location(int id, double latitude, double longitude, String readableName) implements Comparable<Location> {
 
 	/**
 	 * @return validates and verifies that the given lattitude and longitude are
@@ -24,6 +24,11 @@ public record Location(int id, double latitude, double longitude, String readabl
 			return ValidationStatus.createErrorStatus("Longitute should be within range.", null);
 		}
 		return ValidationStatus.OK_STATUS;
+	}
+
+	@Override
+	public int compareTo(Location o) {
+		return this.readableName.compareTo(o.readableName);
 	}
 
 }

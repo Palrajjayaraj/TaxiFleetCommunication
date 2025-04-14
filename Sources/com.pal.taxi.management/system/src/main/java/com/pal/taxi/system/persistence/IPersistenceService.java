@@ -1,8 +1,9 @@
-package com.pal.taxi.system.internal.persistence;
+package com.pal.taxi.system.persistence;
 
 import java.util.Collection;
 
 import com.pal.taxi.Taxi;
+import com.pal.taxi.common.Location;
 import com.pal.taxi.common.booking.Booking;
 import com.pal.taxi.common.booking.BookingRequest;
 import com.pal.taxi.system.filter.IFilter;
@@ -22,4 +23,6 @@ public interface IPersistenceService {
 	void updateTaxiStatus(Taxi taxi);
 
 	Collection<Taxi> getTaxis(Collection<IFilter<Taxi>> filters);
+	
+	Collection<Location> getLocations();
 }
