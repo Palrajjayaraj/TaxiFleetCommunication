@@ -1,0 +1,31 @@
+<div class="dashboard">
+    <h2>Welcome, User!</h2>
+  
+    <button mat-raised-button color="primary" (click)="onNewBooking()">New Booking</button>
+    <button mat-raised-button color="accent" (click)="onPastBookings()">Past Bookings</button>
+  
+    <div *ngIf="showBookingForm" class="booking-form">
+      <mat-form-field appearance="fill">
+        <mat-label>Source</mat-label>
+        <input type="text" matInput [formControl]="sourceControl" [matAutocomplete]="sourceAuto">
+        <mat-autocomplete #sourceAuto="matAutocomplete">
+          <mat-option *ngFor="let loc of filteredSources | async" [value]="loc.readableName">
+            {{ loc.readableName }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+  
+      <mat-form-field appearance="fill">
+        <mat-label>Destination</mat-label>
+        <input type="text" matInput [formControl]="destinationControl" [matAutocomplete]="destAuto">
+        <mat-autocomplete #destAuto="matAutocomplete">
+          <mat-option *ngFor="let loc of filteredDestinations | async" [value]="loc.readableName">
+            {{ loc.readableName }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+  
+      <button mat-raised-button color="warn" (click)="onRequestTaxi()">Request Taxi</button>
+    </div>
+  </div>
+  

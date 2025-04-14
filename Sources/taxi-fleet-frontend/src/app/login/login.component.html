@@ -1,0 +1,12 @@
+<div>
+    <form (ngSubmit)="onSubmit()">
+      <label for="role">Select Role</label>
+      <select [(ngModel)]="role" name="role" id="role" required>
+        <option value="user">User</option>
+        <option value="admin">Admin</option>
+        <option value="taxi">Taxi</option>
+      </select>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+  
