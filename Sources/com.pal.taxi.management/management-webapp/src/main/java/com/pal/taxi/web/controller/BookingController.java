@@ -6,20 +6,23 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pal.taxi.common.TaxiFleetException;
 import com.pal.taxi.common.booking.BookingRequest;
+import com.pal.taxi.web.internal.payload.BookingRequestMapper;
+import com.pal.taxi.web.internal.payload.BookingRequestPayload;
 import com.pal.taxi.web.service.BookingService;
 
 @RestController
-@RequestMapping("/api/bookings")
+@RequestMapping("/bookings")
 public class BookingController {
 
 	@Autowired
 	private BookingService bookingService;
 
-	// Endpoint to create a booking
 	@PostMapping("/request")
-	public String requestBooking(@RequestBody BookingRequest bookingRequest) {
-//		UUID bookingId = bookingService.processBookingRequest(bookingRequest);
+	public String requestBooking(@RequestBody BookingRequestPayload bookingRequest) throws TaxiFleetException {
+		BookingRequest req = new BookingRequestMapper().map(bookingRequest);
+		
 		return "Booking Request submitted successfully. Booking ID: " ;
 	}
 }

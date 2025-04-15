@@ -5,13 +5,15 @@ import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { map, Observable, startWith } from 'rxjs';
+import { BehaviorSubject, map, Observable, startWith } from 'rxjs';
 import { Location } from '../model/location.model';
 import { CommonService } from '../services/common.service';
 import { HttpClientModule } from '@angular/common/http';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { StateService } from '../services/state.service';
 import { User } from '../model/user.model';
+import { BookingRequest, UserBookingRequest } from '../model/booking.request.model';
+import { MatButtonModule } from '@angular/material/button';
+import { BookingService } from '../services/booking.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -22,24 +24,24 @@ import { User } from '../model/user.model';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
-    MatAutocompleteModule,
-    HttpClientModule,
-    FlexLayoutModule
+    MatAutocompleteModule, MatButtonModule,
+    HttpClientModule
   ],
-  providers: [CommonService],
+  providers: [CommonService, BookingService],
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
 })
 export class UserDashboardComponent implements OnInit {
-  constructor(private router: Router, private locationService: CommonService, private stateService: StateService) { }
+
+  constructor(private router: Router, private locationService: CommonService, private bookingService: BookingService, private stateService: StateService) { }
 
   loggedInUser!: User;
 
-  showBookingForm: boolean = false;
+  activeBooking!: BookingRequest;
 
-  sourceControl = new FormControl('');
+  pickupLocControl = new FormControl<Location | null>(null);
 
-  destinationControl = new FormControl('');
+  dropOffLocControl = new FormControl<Location | null>(null);
 
   allLocations: Location[] = [];
 
@@ -49,17 +51,19 @@ export class UserDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedInUser = this.stateService.currentUser;
-    this.locationService.getLocations().subscribe(locations =>
-      this.allLocations = locations
-    );
-
-    this.filteredSources = this.sourceControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filterLocations(value ?? ''))
-    );
-    this.filteredDestinations = this.destinationControl.valueChanges.pipe(
-      startWith(''),
-      map(value => this.filterLocations(value ?? ''))
+    this.locationService.getLocations().subscribe(locations => {
+      this.allLocations = locations;
+      this.filteredSources = this.pickupLocControl.valueChanges.pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value?.readableName ?? ''),
+        map(name => this.filterLocations(name))
+      );
+      this.filteredDestinations = this.dropOffLocControl.valueChanges.pipe(
+        startWith(''),
+        map(value => typeof value === 'string' ? value : value?.readableName ?? ''),
+        map(name => this.filterLocations(name))
+      );
+    }
     );
   }
 
@@ -70,15 +74,25 @@ export class UserDashboardComponent implements OnInit {
     );
   }
 
-  onNewBooking() {
-    this.showBookingForm = !this.showBookingForm;
+  displayLocationName(location: Location): string {
+    return location?.readableName ?? '';
   }
 
   onRequestTaxi() {
-    alert(`Taxi requested from ${this.sourceControl.value} to ${this.destinationControl.value}`);
+    const pickUpLoc = this.pickupLocControl.value;
+    const dropOffLoc = this.dropOffLocControl.value;
+    if (!pickUpLoc || !dropOffLoc) {
+      alert('Please select valid Pickup and Drop off location.');
+      return;
+    }
+    const request = new UserBookingRequest(this.loggedInUser.uuid, new Date(), pickUpLoc, dropOffLoc);
+    this.bookingService.requestBooking(request).subscribe(
+      bookingRequest => {
+        this.activeBooking = bookingRequest;
+        alert('Taxi booked successfully!');
+      }, error => {
+        alert('Taxi booked unsuccessfully!');
+      });
   }
 
-  onPastBookings() {
-    this.router.navigate(['/past-bookings']);
-  }
 }

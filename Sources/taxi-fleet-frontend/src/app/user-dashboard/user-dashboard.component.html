@@ -1,30 +1,38 @@
 <div>
-  <h2>Welcome, {{loggedInUser.name}}</h2>
+  <h2 class="title">Welcome, {{ loggedInUser.name }}</h2>
 
-  <button mat-raised-button color="primary" (click)="onNewBooking()">New Booking</button>
-  <button mat-raised-button color="accent" (click)="onPastBookings()">Past Bookings</button>
+  <div *ngIf="activeBooking">
+    <h3>Your current booking</h3>
+    <p><strong>Status:</strong> {{ activeBooking.status }}</p>
+    <p><strong>From:</strong> {{ activeBooking.pickupLocation.readableName }}</p>
+    <p><strong>To:</strong> {{ activeBooking.dropoffLocation.readableName }}</p>
+  </div>
 
-  <div *ngIf="showBookingForm" class="booking-form">
-    <mat-form-field appearance="fill">
-      <mat-label>Source</mat-label>
-      <input type="text" matInput [formControl]="sourceControl" [matAutocomplete]="sourceAuto">
-      <mat-autocomplete #sourceAuto="matAutocomplete">
-        <mat-option *ngFor="let loc of filteredSources | async" [value]="loc.readableName">
-          {{ loc.readableName }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
-    <mat-form-field appearance="fill">
-      <mat-label>Destination</mat-label>
-      <input type="text" matInput [formControl]="destinationControl" [matAutocomplete]="destAuto">
-      <mat-autocomplete #destAuto="matAutocomplete">
-        <mat-option *ngFor="let loc of filteredDestinations | async" [value]="loc.readableName">
-          {{ loc.readableName }}
-        </mat-option>
-      </mat-autocomplete>
-    </mat-form-field>
-
-    <button mat-raised-button color="warn" (click)="onRequestTaxi()">Request Taxi</button>
+  <div *ngIf="!activeBooking" class="booking-form">
+    <div>
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Source</mat-label>
+        <input type="text" matInput [formControl]="pickupLocControl" [matAutocomplete]="sourceAuto">
+        <mat-autocomplete #sourceAuto="matAutocomplete" [displayWith]="displayLocationName">
+          <mat-option *ngFor="let location of filteredSources | async" [value]="location">
+            {{ location.readableName }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div>
+      <mat-form-field appearance="fill" class="form-field">
+        <mat-label>Destination</mat-label>
+        <input type="text" matInput [formControl]="dropOffLocControl" [matAutocomplete]="destAuto">
+        <mat-autocomplete #destAuto="matAutocomplete" [displayWith]="displayLocationName">
+          <mat-option *ngFor="let location of filteredDestinations | async" [value]="location">
+            {{ location.readableName }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </div>
+    <div>
+      <button mat-raised-button color="primary" (click)="onRequestTaxi()">Request Booking</button>
+    </div>
   </div>
 </div>

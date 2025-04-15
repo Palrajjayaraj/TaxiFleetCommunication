@@ -2,8 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, shareReplay } from 'rxjs/operators';
 import { environment } from '../../environments/environment';
-import { Location } from '../model/location.model';
-import { User } from '../model/user.model';
+import type { Location } from '../model/location.model';
+import type { User } from '../model/user.model';
 import { Observable } from 'rxjs/internal/Observable';
 
 /**
@@ -30,7 +30,6 @@ export class CommonService {
   getLocations(): Observable<Location[]> {
     if (!this.locations) {
       this.locations = this.http.get<Location[]>(this.locationsURL).pipe(
-        map(locations => locations.map(loc => new Location(loc.id, loc.readableName))),
         shareReplay(1) // cache the response
       );
     }
@@ -41,7 +40,6 @@ export class CommonService {
   getUsers(): Observable<User[]> {
     if (!this.users) {
       this.users = this.http.get<User[]>(this.usersURL).pipe(
-        map(users => users.map(u => new User(u.uuid, u.name))),
         shareReplay(1) // cache the response
       );
     }
