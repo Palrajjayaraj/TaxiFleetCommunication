@@ -7,8 +7,11 @@ import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
 import { map, Observable, startWith } from 'rxjs';
 import { Location } from '../model/location.model';
-import { LocationService } from '../services/location.service';
+import { CommonService } from '../services/common.service';
 import { HttpClientModule } from '@angular/common/http';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { StateService } from '../services/state.service';
+import { User } from '../model/user.model';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -20,14 +23,17 @@ import { HttpClientModule } from '@angular/common/http';
     MatFormFieldModule,
     MatInputModule,
     MatAutocompleteModule,
-    HttpClientModule
+    HttpClientModule,
+    FlexLayoutModule
   ],
-  providers: [LocationService],
+  providers: [CommonService],
   templateUrl: './user-dashboard.component.html',
   styleUrls: ['./user-dashboard.component.css'],
 })
 export class UserDashboardComponent implements OnInit {
-  constructor(private router: Router, private locationService: LocationService) { }
+  constructor(private router: Router, private locationService: CommonService, private stateService: StateService) { }
+
+  loggedInUser!: User;
 
   showBookingForm: boolean = false;
 
@@ -38,10 +44,15 @@ export class UserDashboardComponent implements OnInit {
   allLocations: Location[] = [];
 
   filteredSources!: Observable<Location[]>;
+
   filteredDestinations!: Observable<Location[]>;
 
   ngOnInit(): void {
-    this.allLocations = this.locationService.getLocations();
+    this.loggedInUser = this.stateService.currentUser;
+    this.locationService.getLocations().subscribe(locations =>
+      this.allLocations = locations
+    );
+
     this.filteredSources = this.sourceControl.valueChanges.pipe(
       startWith(''),
       map(value => this.filterLocations(value ?? ''))

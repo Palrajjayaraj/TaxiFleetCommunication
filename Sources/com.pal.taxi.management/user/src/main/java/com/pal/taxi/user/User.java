@@ -6,7 +6,7 @@ import com.pal.taxi.common.IUniqueIdentifiable;
 
 import lombok.NonNull;
 
-public class User implements IUniqueIdentifiable {
+public class User implements IUniqueIdentifiable, Comparable<User> {
 
 	private final UUID uuid;
 
@@ -25,5 +25,10 @@ public class User implements IUniqueIdentifiable {
 	}
 
 	private final String name;
+
+	@Override
+	public int compareTo(User other) {
+		return this.name.compareTo(other.name);
+	}
 
 }

@@ -8,6 +8,7 @@ import com.pal.taxi.common.booking.Booking;
 import com.pal.taxi.common.booking.BookingRequest;
 import com.pal.taxi.system.filter.IFilter;
 import com.pal.taxi.system.persistence.IPersistenceService;
+import com.pal.taxi.user.User;
 
 public class PersistenceServiceImpl implements IPersistenceService {
 
@@ -52,5 +53,12 @@ public class PersistenceServiceImpl implements IPersistenceService {
 	}
 
 	private final LocationRepository locationRepository = new LocationRepository();
+
+	private final UserRepository userRepository = new UserRepository();
+	
+	@Override
+	public Collection<User> getUsers() {
+		return userRepository.getAllUsers();
+	}
 
 }

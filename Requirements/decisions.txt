@@ -8,3 +8,5 @@
     yeah, it is better to have a persistence system.
 4. Which way to use to connect to DB? JDBC, Hibernate or Spring JPA.
     Hibernate - as it provides automatic conversion from DB to POJO and our's is a very simple application. This should be sufficient.
+5. Which layouting to use in angular application?
+    The angular flexlayout was deprecated. Let's that itself as alternatives such as CSS flex or grid, needs some learning.

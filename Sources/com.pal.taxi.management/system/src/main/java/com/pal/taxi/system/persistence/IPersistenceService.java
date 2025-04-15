@@ -7,6 +7,7 @@ import com.pal.taxi.common.Location;
 import com.pal.taxi.common.booking.Booking;
 import com.pal.taxi.common.booking.BookingRequest;
 import com.pal.taxi.system.filter.IFilter;
+import com.pal.taxi.user.User;
 
 public interface IPersistenceService {
 
@@ -23,6 +24,14 @@ public interface IPersistenceService {
 	void updateTaxiStatus(Taxi taxi);
 
 	Collection<Taxi> getTaxis(Collection<IFilter<Taxi>> filters);
-	
+
+	/**
+	 * @return All the predefined locations from the DB
+	 */
 	Collection<Location> getLocations();
+
+	/**
+	 * @return All the users from the DB
+	 */
+	Collection<User> getUsers();
 }

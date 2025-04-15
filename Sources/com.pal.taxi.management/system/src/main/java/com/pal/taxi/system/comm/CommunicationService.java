@@ -10,6 +10,7 @@ import com.pal.taxi.common.booking.BookingRequest;
 import com.pal.taxi.common.validation.ValidationException;
 import com.pal.taxi.system.persistence.IPersistenceService;
 import com.pal.taxi.system.persistence.PersistenceServiceProvider;
+import com.pal.taxi.user.User;
 
 /**
  * The coomunication service for this system.<br>
@@ -74,4 +75,12 @@ public class CommunicationService {
 	public Collection<Location> getLocations() {
 		return persistenceService.getLocations();
 	}
+	
+	/**
+	 * @return provides all the predefined users.
+	 */
+	public Collection<User> getUsers() {
+		return persistenceService.getUsers();
+	}
+	
 }

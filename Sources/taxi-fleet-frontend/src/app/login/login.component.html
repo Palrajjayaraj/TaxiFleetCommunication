@@ -1,12 +1,31 @@
 <div>
-    <form (ngSubmit)="onSubmit()">
-      <label for="role">Select Role</label>
-      <select [(ngModel)]="role" name="role" id="role" required>
-        <option value="user">User</option>
-        <option value="admin">Admin</option>
-        <option value="taxi">Taxi</option>
-      </select>
-      <button type="submit">Login</button>
+  <div>
+    <form (ngSubmit)="onLogin()">
+      <h2 class="mat-typography">Login</h2>
+      <p class="subtext">Please select your role and select your User ID to log in.</p>
+      <div>
+        <mat-form-field appearance="fill">
+          <mat-label>Select Role</mat-label>
+          <mat-select [(ngModel)]="role" name="role" required>
+            <mat-option value="user">User</mat-option>
+            <mat-option value="admin">Admin</mat-option>
+            <mat-option value="taxi">Taxi</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div>
+        <mat-form-field appearance="fill" *ngIf="role === 'user'">
+          <mat-label>User ID</mat-label>
+          <mat-select [(ngModel)]="selectedUser" name="userId" required>
+            <mat-option *ngFor="let user of users | async" [value]="user">
+              {{ user.name }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="login-button-container">
+        <button mat-raised-button color="primary" type="submit">Login</button>
+      </div>
     </form>
   </div>
-  
+</div>

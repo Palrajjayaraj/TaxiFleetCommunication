@@ -15,6 +15,20 @@
       "request": "launch",
       "preLaunchTask": "npm: test",
       "url": "http://localhost:9876/debug.html"
+    },
+    {
+      "type": "firefox",
+      "request": "launch",
+      "name": "Launch Angular in Firefox",
+      "url": "http://localhost:4200",
+      "webRoot": "${workspaceFolder}/src",
+      "reAttach": true,
+      "pathMappings": [
+        {
+          "url": "webpack:///src/",
+          "path": "${workspaceFolder}/src"
+        }
+      ]
     }
   ]
 }
