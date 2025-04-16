@@ -1,6 +1,7 @@
 package com.pal.taxi.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +21,10 @@ public class BookingController {
 	private BookingService bookingService;
 
 	@PostMapping("/request")
-	public String requestBooking(@RequestBody BookingRequestPayload bookingRequest) throws TaxiFleetException {
+	public ResponseEntity<BookingRequest> requestBooking(@RequestBody BookingRequestPayload bookingRequest)
+			throws TaxiFleetException {
 		BookingRequest req = new BookingRequestMapper().map(bookingRequest);
-		
-		return "Booking Request submitted successfully. Booking ID: " ;
+		bookingService.publishBookingRequest(req);
+		return ResponseEntity.ok(req);
 	}
 }

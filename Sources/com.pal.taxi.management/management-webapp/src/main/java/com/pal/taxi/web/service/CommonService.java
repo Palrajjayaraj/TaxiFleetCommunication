@@ -5,7 +5,10 @@ import java.util.Collection;
 import org.springframework.stereotype.Service;
 
 import com.pal.taxi.common.Location;
-import com.pal.taxi.system.comm.CommunicationService;
+import com.pal.taxi.common.TaxiFleetException;
+import com.pal.taxi.common.validation.ValidationException;
+import com.pal.taxi.system.LocationManager;
+import com.pal.taxi.system.UserManager;
 import com.pal.taxi.user.User;
 
 /**
@@ -16,12 +19,12 @@ import com.pal.taxi.user.User;
 @Service
 public class CommonService {
 
-	public Collection<Location> getAllLocations() {
-		return new CommunicationService().getLocations();
+	public Collection<Location> getAllLocations() throws ValidationException {
+		return new LocationManager().getLocations();
 	}
 
-	public Collection<User> getAllUsers() {
-		return new CommunicationService().getUsers();
+	public Collection<User> getAllUsers() throws TaxiFleetException {
+		return new UserManager().getUsers();
 	}
 
 }

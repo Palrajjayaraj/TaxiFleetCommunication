@@ -23,7 +23,7 @@ public interface IPersistenceService {
 
 	void updateTaxiStatus(Taxi taxi);
 
-	Collection<Taxi> getTaxis(Collection<IFilter<Taxi>> filters);
+	Collection<Taxi> getAllAvailableTaxis();
 
 	/**
 	 * @return All the predefined locations from the DB

@@ -10,11 +10,23 @@ import com.pal.taxi.system.filter.IFilter;
 import com.pal.taxi.system.persistence.IPersistenceService;
 import com.pal.taxi.user.User;
 
+/**
+ * This is a service provided thru java service loader mechanishm and hence,
+ * this is initialized only once.
+ */
 public class PersistenceServiceImpl implements IPersistenceService {
+
+	/**
+	 * Initialises the service and adds default values to the DB, if they are not
+	 * available.
+	 */
+	public PersistenceServiceImpl() {
+		HibernateUtil.getInstance();
+	}
 
 	@Override
 	public void saveBookingRequest(BookingRequest request) {
-
+		bookingRequestRepo.saveBookingRequest(request);
 	}
 
 	@Override
@@ -43,8 +55,8 @@ public class PersistenceServiceImpl implements IPersistenceService {
 	}
 
 	@Override
-	public Collection<Taxi> getTaxis(Collection<IFilter<Taxi>> filters) {
-		return null;
+	public Collection<Taxi> getAllAvailableTaxis() {
+		return taxiRepository.getAvailableTaxis();
 	}
 
 	@Override
@@ -55,7 +67,11 @@ public class PersistenceServiceImpl implements IPersistenceService {
 	private final LocationRepository locationRepository = new LocationRepository();
 
 	private final UserRepository userRepository = new UserRepository();
-	
+
+	private final BookingRequestRepository bookingRequestRepo = new BookingRequestRepository();
+
+	private final TaxiRepository taxiRepository = new TaxiRepository();
+
 	@Override
 	public Collection<User> getUsers() {
 		return userRepository.getAllUsers();

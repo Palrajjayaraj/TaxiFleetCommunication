@@ -59,6 +59,14 @@ public class LockRunnerTest {
 	}
 
 	@Test
+	public void testSafelyRunWithWriteLockExecutesCode() throws TaxiFleetException {
+		final boolean[] executed = { false };
+		lockRunner.runSafelyWithWriteLock(() -> executed[0] = true);
+		assertTrue("Write lock code should be executed", executed[0]);
+		verifyLockCalls(0, 1);
+	}
+
+	@Test
 	public void testReadLockIsReleasedAfterException() throws TaxiFleetException {
 		try {
 			lockRunner.runWithReadLock(() -> {
@@ -80,6 +88,19 @@ public class LockRunnerTest {
 			});
 			fail("Expected TaxiFleetException to be thrown");
 		} catch (TaxiFleetException tfe) {
+			// expected
+		}
+		verifyLockCalls(0, 1);
+	}
+
+	@Test
+	public void testWriteLockIsReleasedAfterExceptionWhileExcutingSafely() throws TaxiFleetException {
+		try {
+			lockRunner.runSafelyWithWriteLock(() -> {
+				throw new RuntimeException ("execution during execution");
+			});
+			fail("Expected TaxiFleetException to be thrown");
+		} catch (RuntimeException tfe) {
 			// expected
 		}
 		verifyLockCalls(0, 1);

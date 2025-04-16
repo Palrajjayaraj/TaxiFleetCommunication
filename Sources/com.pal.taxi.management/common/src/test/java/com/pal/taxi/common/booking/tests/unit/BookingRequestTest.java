@@ -28,7 +28,6 @@ public class BookingRequestTest {
 
 	@Test
 	public void testCreateValidBookingRequest() throws TaxiFleetException {
-
 		BookingRequest request = BookingRequest.createRequest(userID, LocalDateTime.now(), validPickup, validDropoff);
 		assertNotNull(request.getUuid());
 		assertEquals(userID, request.getUserId());

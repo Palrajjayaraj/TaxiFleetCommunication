@@ -20,7 +20,7 @@ public abstract class AbstractRepository<T> {
 	 */
 	protected abstract Class<T> getEntityClass();
 
-	protected List<T> getAll() {
+	public List<T> getAll() {
 		try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
 			HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<T> criteria = builder.createQuery(getEntityClass());

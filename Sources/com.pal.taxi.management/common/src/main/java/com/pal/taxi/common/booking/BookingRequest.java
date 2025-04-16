@@ -48,8 +48,9 @@ public class BookingRequest {
 	/** Runner to prtcted status information */
 	private final LockRunner statusLockRunner = new LockRunner(new ReentrantReadWriteLock());
 
-	private BookingRequest(UUID userId, LocalDateTime requestTime, Location pickupLocation, Location dropoffLocation) {
-		this.uuid = UUID.randomUUID();
+	private BookingRequest(UUID requestID, UUID userId, LocalDateTime requestTime, Location pickupLocation,
+			Location dropoffLocation, Status status) {
+		this.uuid = requestID;
 		this.status = Status.PENDING;
 		this.userId = userId;
 		this.requestTime = requestTime;
@@ -57,14 +58,19 @@ public class BookingRequest {
 		this.dropoffLocation = dropoffLocation;
 	}
 
-	public static BookingRequest createRequest(UUID userId, LocalDateTime bookingTime, Location pickupLocation,
-			Location dropoffLocation) throws TaxiFleetException {
-		assertInputArguments(userId, bookingTime, pickupLocation, dropoffLocation);
-		return new BookingRequest(userId, bookingTime, pickupLocation, dropoffLocation);
+	public static BookingRequest createRequest(UUID requestID, UUID userId, LocalDateTime requestTime,
+			Location pickupLocation, Location dropoffLocation, Status status) throws TaxiFleetException {
+		assertInputArguments(requestID, userId, requestTime, pickupLocation, dropoffLocation, status);
+		return new BookingRequest(requestID, userId, requestTime, pickupLocation, dropoffLocation, status);
 	}
 
-	private static void assertInputArguments(UUID userId, LocalDateTime bookingTime, Location pickupLocation,
+	public static BookingRequest createRequest(UUID userId, LocalDateTime bookingTime, Location pickupLocation,
 			Location dropoffLocation) throws TaxiFleetException {
+		return createRequest(UUID.randomUUID(), userId, bookingTime, pickupLocation, dropoffLocation, Status.PENDING);
+	}
+
+	private static void assertInputArguments(UUID requestId, UUID userId, LocalDateTime bookingTime,
+			Location pickupLocation, Location dropoffLocation, Status status) throws TaxiFleetException {
 		Objects.requireNonNull(userId);
 		Objects.requireNonNull(bookingTime);
 		Objects.requireNonNull(pickupLocation);

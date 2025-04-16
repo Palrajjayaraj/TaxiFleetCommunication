@@ -12,7 +12,9 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import com.pal.taxi.persistence.entities.AppliationInitializationEntity;
+import com.pal.taxi.persistence.entities.BookingRequestEntity;
 import com.pal.taxi.persistence.entities.LocationEntity;
+import com.pal.taxi.persistence.entities.TaxiEntity;
 import com.pal.taxi.persistence.entities.UserEntity;
 import com.pal.taxi.persistence.internal.init.DataInitializer;
 
@@ -43,9 +45,11 @@ public class HibernateUtil {
 		try {
 			Configuration config = new Configuration();
 			Properties settings = new Properties();
-			// if we dont go a step back and go again into persistence, when it is loaded from web-app
+			// if we dont go a step back and go again into persistence, when it is loaded
+			// from web-app
 			// it is trying to search for data in the web-app resources folder.
-			File propertyFile = Paths.get("..","persistence","src", "main", "resources", "hibernate.properties").toFile();
+			File propertyFile = Paths.get("..", "persistence", "src", "main", "resources", "hibernate.properties")
+					.toFile();
 			try (FileInputStream reader = new FileInputStream(propertyFile)) {
 				settings.load(reader);
 			}
@@ -53,6 +57,8 @@ public class HibernateUtil {
 			config.addAnnotatedClass(UserEntity.class);
 			config.addAnnotatedClass(AppliationInitializationEntity.class);
 			config.addAnnotatedClass(LocationEntity.class);
+			config.addAnnotatedClass(BookingRequestEntity.class);
+			config.addAnnotatedClass(TaxiEntity.class);
 			ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(config.getProperties())
 					.build();
 			return config.buildSessionFactory(serviceRegistry);

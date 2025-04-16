@@ -5,7 +5,6 @@ import java.util.Collections;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
-import com.pal.taxi.common.Location;
 import com.pal.taxi.persistence.entities.UserEntity;
 import com.pal.taxi.persistence.mapper.internal.UserMapper;
 import com.pal.taxi.user.User;

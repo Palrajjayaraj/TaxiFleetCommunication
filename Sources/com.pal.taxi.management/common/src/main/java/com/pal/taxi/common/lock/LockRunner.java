@@ -39,4 +39,17 @@ public class LockRunner {
 		}
 	}
 
+	/**
+	 * Runs the given code after acquiring the write lock and it expects no
+	 * exception to be thrown.
+	 */
+	public void runSafelyWithWriteLock(@NonNull Runnable code) {
+		try {
+			this.lock.writeLock().lock();
+			code.run();
+		} finally {
+			this.lock.writeLock().unlock();
+		}
+	}
+
 }
