@@ -37,12 +37,15 @@ import { CommonService } from '../../../services/common.service';
 })
 export class TaxiReportComponent implements OnInit, AfterViewInit {
   displayedColumns: string[] = ['numberPlate', 'status', 'location'];
+  
   filteredDataSource = new MatTableDataSource<Taxi>();
 
   statusOptions: string[] = Object.values(TaxiStatus);
+
   selectedStatus: string = ''; 
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
+
   @ViewChild(MatSort) sort!: MatSort;
 
   constructor(private taxiService: CommonService) {}
