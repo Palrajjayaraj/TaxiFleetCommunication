@@ -71,7 +71,7 @@ export class TaxiRoleHandler implements RoleHandler<Taxi> {
     }
 
     getNextPageName(): string {
-        return '/taxi/dashboard';
+        return '/taxi-dashboard';
     }
 }
 

@@ -1,0 +1,29 @@
+.dashboard-card {
+    margin: 16px;
+    padding: 16px;
+}
+
+.title {
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.form-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 8px;
+}
+
+.form-field {
+    flex: 1 1 300px;
+    min-width: 250px;
+}
+
+.arrow {
+    margin: 0 8px;
+    font-weight: bold;
+}

@@ -1,19 +1,19 @@
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { BehaviorSubject, map, Observable, startWith } from 'rxjs';
-import { Location } from '../model/location.model';
-import { CommonService } from '../services/common.service';
-import { HttpClientModule } from '@angular/common/http';
-import { StateService } from '../services/state.service';
-import { User } from '../model/user.model';
+import { map, Observable, startWith } from 'rxjs';
 import { BookingRequest, UserBookingRequest } from '../model/booking.request.model';
-import { MatButtonModule } from '@angular/material/button';
+import { Location } from '../model/location.model';
+import { User } from '../model/user.model';
 import { BookingService } from '../services/booking.service';
+import { CommonService } from '../services/common.service';
+import { StateService } from '../services/state.service';
 
 @Component({
   selector: 'app-user-dashboard',
