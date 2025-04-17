@@ -53,7 +53,7 @@ public class BookingRequestsManager {
 	}
 
 	public void submitBookingRequest(BookingRequest request) {
-		bookingQueue.add(request);
+		bookingQueue.offer(request);
 	}
 
 	public void receiveTaxiResponse(UUID bookingId, UUID taxiId, TaxiResponse response) {

@@ -21,4 +21,6 @@ public interface BookingRequestsMapper {
 		return BookingRequest.createRequest(entity.getUuid(), entity.getUserId(), entity.getRequestTime(), pickUp,
 				dropOff, entity.getStatus());
 	}
+	
+	BookingRequestEntity toEntity(BookingRequest request) ;
 }

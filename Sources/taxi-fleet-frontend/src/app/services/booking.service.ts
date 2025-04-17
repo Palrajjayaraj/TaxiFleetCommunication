@@ -18,8 +18,10 @@ export class BookingService {
         return this.http.post<BookingRequest>(this.bookingRequestUrl, request);
     }
 
-    response(taxiResponse : TaxiResponsePayload): void {
-        this.http.post(BookingService.TAXI_RESPONSE_URL, taxiResponse);
+    response(taxiResponse: TaxiResponsePayload): void {
+        this.http.post(BookingService.TAXI_RESPONSE_URL, taxiResponse).subscribe(data => {
+            console.log("Taxi response sent successfully");
+        });
     }
 
 }

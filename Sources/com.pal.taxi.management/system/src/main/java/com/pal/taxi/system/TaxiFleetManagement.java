@@ -50,7 +50,7 @@ public class TaxiFleetManagement implements IPersistenceServiceConsumer {
 	 */
 	public void publishBookingRequest(BookingRequest request) {
 		persistenceService.ifPresent(service -> {
-			service.saveBookingRequest(request);
+			service.createBookingRequest(request);
 		});
 		requestsManager.submitBookingRequest(request);
 	}

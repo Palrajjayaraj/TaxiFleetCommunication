@@ -13,6 +13,8 @@ import com.pal.taxi.user.User;
 
 public interface IPersistenceService {
 
+	void createBookingRequest(BookingRequest request);
+
 	void saveBookingRequest(BookingRequest request);
 
 	Collection<BookingRequest> getBookingRequests(Collection<IFilter<BookingRequest>> filters);
@@ -45,4 +47,5 @@ public interface IPersistenceService {
 	 * @return The user identified by the UserID
 	 */
 	Optional<User> getUser(UUID userId);
+
 }

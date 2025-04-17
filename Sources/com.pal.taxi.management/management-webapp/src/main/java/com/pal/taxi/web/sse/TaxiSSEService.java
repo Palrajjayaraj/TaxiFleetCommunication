@@ -12,7 +12,7 @@ import com.pal.taxi.common.booking.BookingRequest;
 @Service
 public class TaxiSSEService extends AbstractSseService {
 
-	private static final String BOOKING_REQUEST = "booking-request";
+	public static final String BOOKING_REQUEST = "booking-request";
 
 	/**
 	 * send the request to the taxi identified by UUID, it is is still subsribed.
@@ -21,13 +21,14 @@ public class TaxiSSEService extends AbstractSseService {
 	 * @param request
 	 */
 	public void sendToTaxi(UUID taxiId, BookingRequest request) {
-		SseEmitter emitter = emitters.get(taxiId);
+		Subscription subscription = new Subscription(taxiId, BOOKING_REQUEST);
+		SseEmitter emitter = emitters.get(subscription);
 		if (emitter != null) {
 			try {
 				emitter.send(SseEmitter.event().name(BOOKING_REQUEST).data(request, MediaType.APPLICATION_JSON));
 			} catch (IOException e) {
 				emitter.completeWithError(e);
-				emitters.remove(taxiId);
+				emitters.remove(subscription);
 			}
 		}
 	}

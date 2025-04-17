@@ -26,10 +26,18 @@
 </mat-card>
 
 <mat-card>
-    <mat-card-title>Incoming Booking Request</mat-card-title>
+    <mat-card-title>Current Booking</mat-card-title>
     <mat-list>
-        <!-- <mat-list-item *ngIf="incomingRequest$ | async as req">
-            {{ req.pickupLocation }} → {{ req.dropoffLocation }}
-        </mat-list-item> -->
+        <mat-list-item *ngIf="currentBooking$ | async as booking">
+            <div>
+                (Request ID: <code>{{ booking.request.uuid }}</code>)
+            </div>
+            <div>
+                Passenger is waiting at <strong>{{ booking.request.pickupLocation.readableName }}</strong>
+            </div>
+        </mat-list-item>
+        <mat-list-item *ngIf="!(currentBooking$ | async)">
+            <i>No current booking</i>
+        </mat-list-item>
     </mat-list>
 </mat-card>

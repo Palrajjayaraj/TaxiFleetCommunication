@@ -16,6 +16,8 @@ export class BookingEventsService {
 
     private bookingRequestNotificationsUrl = environment.BASE_URL + 'notifications/taxi/bookingsRequest/subscribe/';
 
+    private bookingConfirmationNotificationsUrl = environment.BASE_URL + 'notifications/taxi/bookings/subscribe/';
+
     private static readonly BOOKING_CONFIRM = 'booking-confirmation';
 
     private static readonly BOOKING_REQUEST = 'booking-request';
@@ -23,31 +25,19 @@ export class BookingEventsService {
     constructor(private zone: NgZone) { }
 
     listenToBookingRequests(taxi: Taxi): Observable<BookingRequest> {
-        const url = `${this.bookingRequestNotificationsUrl}${taxi.id}`;
-        return new Observable(observer => {
-            const eventSource = new EventSource(url);
-            eventSource.addEventListener(BookingEventsService.BOOKING_REQUEST, (event: MessageEvent) => {
-                this.zone.run(() => {
-                    const data = JSON.parse(event.data);
-                    observer.next(data);
-                });
-            });
-
-            eventSource.onerror = (error) => {
-                console.error("SSE error", error);
-                eventSource.close();
-                observer.error(error);
-            };
-
-            return () => eventSource.close();
-        });
+        return this.createSseObservable<BookingRequest>(taxi.id, this.bookingRequestNotificationsUrl, BookingEventsService.BOOKING_REQUEST);
     }
 
-    listenerToBookingConfirmation(taxi: Taxi): Observable<Booking> {
-        const url = `${this.bookingRequestNotificationsUrl}${taxi.id}`;
+    listenToBookingConfirmations(taxi: Taxi): Observable<Booking> {
+        return this.createSseObservable<Booking>(taxi.id, this.bookingConfirmationNotificationsUrl, BookingEventsService.BOOKING_CONFIRM);
+    }
+
+    private createSseObservable<T>(taxiId: string, baseURL: string, eventType: string): Observable<T> {
+        const url = `${baseURL}${taxiId}`;
         return new Observable(observer => {
             const eventSource = new EventSource(url);
-            eventSource.addEventListener(BookingEventsService.BOOKING_CONFIRM, (event: MessageEvent) => {
+
+            eventSource.addEventListener(eventType, (event: MessageEvent) => {
                 this.zone.run(() => {
                     const data = JSON.parse(event.data);
                     observer.next(data);
@@ -55,7 +45,7 @@ export class BookingEventsService {
             });
 
             eventSource.onerror = (error) => {
-                console.error("SSE error", error);
+                console.error('SSE error', error);
                 eventSource.close();
                 observer.error(error);
             };

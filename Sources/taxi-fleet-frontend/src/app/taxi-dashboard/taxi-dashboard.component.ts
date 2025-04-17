@@ -19,6 +19,8 @@ import { CommonService } from '../services/common.service';
 import { StateService } from '../services/state.service';
 import { TaxiService } from '../services/taxi.service';
 import { BookingEventsService } from '../services/taxi.sse.service';
+import { Booking } from '../model/booking.model';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
 @Component({
   selector: 'app-taxi-dashboard',
@@ -50,6 +52,8 @@ export class TaxiDashboardComponent implements OnInit {
 
   statusOptions = Object.values(TaxiStatus);
 
+  currentBooking$: BehaviorSubject<Booking | null> = new BehaviorSubject<Booking | null>(null);
+
   constructor(
     private commonService: CommonService,
     private stateService: StateService,
@@ -73,13 +77,18 @@ export class TaxiDashboardComponent implements OnInit {
   }
   addSseListeners() {
     this.addBookingRequestListener();
-    this.notificationService.listenerToBookingConfirmation(this.loggedInTaxi).subscribe(booking => {
+    this.addBookingListener();
+  }
+
+  addBookingListener() {
+    this.notificationService.listenToBookingConfirmations(this.loggedInTaxi).subscribe(booking => {
       if (booking) {
-        console.log('Booking confirmed:', booking);
         this.loggedInTaxi.currentStatus = TaxiStatus.BOOKED;
+        this.currentBooking$.next(booking);
       }
     });
   }
+
   addBookingRequestListener() {
     this.notificationService.listenToBookingRequests(this.loggedInTaxi).subscribe(request => {
       if (TaxiStatus.AVAILABLE === this.loggedInTaxi.currentStatus) {
@@ -90,13 +99,12 @@ export class TaxiDashboardComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-          var payload;
+          console.log('Dialog closed with result:', result);
           if (result === TaxiResponse.ACCEPTED) {
-            payload = new TaxiResponsePayload(this.loggedInTaxi.id, request.uuid, TaxiResponse.ACCEPTED);
+            this.bookingService.response(new TaxiResponsePayload(this.loggedInTaxi.id, request.uuid, TaxiResponse.ACCEPTED));
           } else {
-            payload = new TaxiResponsePayload(this.loggedInTaxi.id, request.uuid, TaxiResponse.REJECTED);
+            this.bookingService.response(new TaxiResponsePayload(this.loggedInTaxi.id, request.uuid, TaxiResponse.REJECTED));
           }
-          this.bookingService.response(payload);
         });
       }
     });

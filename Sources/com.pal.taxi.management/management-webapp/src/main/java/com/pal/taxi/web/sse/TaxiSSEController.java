@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
+import com.pal.taxi.web.sse.AbstractSseService.Subscription;
+
 @RestController
 @RequestMapping("/notifications/taxi")
 public class TaxiSSEController {
@@ -20,7 +22,12 @@ public class TaxiSSEController {
 	}
 
 	@GetMapping(value = "/bookingsRequest/subscribe/{taxiId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-	public SseEmitter subscribe(@PathVariable UUID taxiId) {
-		return sseService.subscribe(taxiId);
+	public SseEmitter subscribeForRequest(@PathVariable UUID taxiId) {
+		return sseService.subscribe(new Subscription(taxiId, TaxiSSEService.BOOKING_REQUEST));
+	}
+
+	@GetMapping(value = "/bookings/subscribe/{taxiId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public SseEmitter subscribeForBooking(@PathVariable UUID taxiId) {
+		return sseService.subscribe(new Subscription(taxiId, AbstractSseService.BOOKING_CONFIRMATION));
 	}
 }

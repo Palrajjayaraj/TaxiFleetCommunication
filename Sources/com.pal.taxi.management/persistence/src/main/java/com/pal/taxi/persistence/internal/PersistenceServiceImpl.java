@@ -27,6 +27,11 @@ public class PersistenceServiceImpl implements IPersistenceService {
 	}
 
 	@Override
+	public void createBookingRequest(BookingRequest request) {
+		bookingRequestRepo.createBookingRequest(request);
+	}
+
+	@Override
 	public void saveBookingRequest(BookingRequest request) {
 		bookingRequestRepo.saveBookingRequest(request);
 	}

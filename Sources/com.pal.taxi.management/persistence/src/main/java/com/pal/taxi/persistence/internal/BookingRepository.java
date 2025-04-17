@@ -46,7 +46,8 @@ public class BookingRepository extends AbstractRepository<BookingEntity> {
 	public void saveBooking(Booking booking) {
 		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
 			Transaction tx = session.beginTransaction();
-			session.persist(booking);
+			BookingEntity entity = BookingMapper.INSTANCE.toEntity(booking);
+			session.persist(entity);
 			session.flush();
 			session.clear();
 			tx.commit();
