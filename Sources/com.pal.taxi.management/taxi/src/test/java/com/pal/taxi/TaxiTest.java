@@ -36,7 +36,7 @@ public class TaxiTest {
 		Taxi taxi = new Taxi(taxiId, numberPlate, TaxiStatus.AVAILABLE, location1);
 		assertEquals(taxiId, taxi.getId());
 		assertEquals(numberPlate, taxi.getNumberPlate());
-		assertEquals(TaxiStatus.AVAILABLE, taxi.getStatus());
+		assertEquals(TaxiStatus.AVAILABLE, taxi.getCurrentStatus());
 		assertEquals(location1, taxi.getCurrentLocation());
 	}
 
@@ -44,7 +44,7 @@ public class TaxiTest {
 	public void testUpdateStatus_validTransition() throws ValidationException {
 		Taxi taxi = new Taxi(taxiId, numberPlate, TaxiStatus.AVAILABLE, location1);
 		taxi.updateStatus(TaxiStatus.BOOKED);
-		assertEquals(TaxiStatus.BOOKED, taxi.getStatus());
+		assertEquals(TaxiStatus.BOOKED, taxi.getCurrentStatus());
 	}
 
 	@Test

@@ -15,7 +15,7 @@
         <div>
             <mat-form-field appearance="fill">
                 <mat-label>Status</mat-label>
-                <mat-select [value]="loggedInTaxi.status" (selectionChange)="onStatusChange($event.value)">
+                <mat-select [value]="loggedInTaxi.currentStatus" (selectionChange)="onStatusChange($event.value)">
                     <mat-option *ngFor="let opt of statusOptions" [value]="opt">
                         {{ opt }}
                     </mat-option>

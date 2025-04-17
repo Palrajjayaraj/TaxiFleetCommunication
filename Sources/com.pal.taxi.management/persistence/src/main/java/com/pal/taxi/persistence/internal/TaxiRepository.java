@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.stream.Collectors;
 
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
 
 import com.pal.taxi.Taxi;
@@ -50,6 +51,20 @@ public class TaxiRepository extends AbstractRepository<TaxiEntity> {
 			Root<TaxiEntity> root = criteria.from(getEntityClass());
 			criteria.select(root).where(builder.equal(root.get("currentStatus"), TaxiStatus.AVAILABLE));
 			return toTaxis(session.createQuery(criteria).getResultList());
+		}
+	}
+
+	/**
+	 * Updates the taxi status such as state and location to the DB.
+	 * 
+	 * @param taxi The taxi.
+	 */
+	public void updateTaxiStatus(Taxi taxi) {
+		TaxiEntity enity = TaxiMapper.INSTANCE.toEnity(taxi);
+		try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+			Transaction tx = session.beginTransaction();
+			session.merge(enity);
+			tx.commit();
 		}
 	}
 

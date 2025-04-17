@@ -9,8 +9,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.pal.taxi.Taxi;
 import com.pal.taxi.common.Location;
-import com.pal.taxi.common.TaxiFleetException;
-import com.pal.taxi.common.ThrowingSupplier;
 import com.pal.taxi.user.User;
 import com.pal.taxi.web.service.CommonService;
 
@@ -26,27 +24,19 @@ public class CommonController {
 
 	@GetMapping("/locations")
 	public ResponseEntity<Collection<Location>> getLocations() {
-		return wrapAroundEntity(() -> commonService.getAllLocations());
+		return SafeRunner.supply(() -> commonService.getAllLocations());
 	}
 
 	@GetMapping("/users")
 	public ResponseEntity<Collection<User>> getUsers() {
-		return wrapAroundEntity(() -> commonService.getAllUsers());
+		return SafeRunner.supply(() -> commonService.getAllUsers());
 	}
 	
 
 	@GetMapping("/taxis")
 	public ResponseEntity<Collection<Taxi>> getTaxis() {
-		return wrapAroundEntity(() -> commonService.getAllTaxis());
+		return SafeRunner.supply(() -> commonService.getAllTaxis());
 	}
 
 
-	private <T> ResponseEntity<T> wrapAroundEntity(ThrowingSupplier<T> supplier) {
-		try {
-			return ResponseEntity.ok(supplier.get());
-		} catch (TaxiFleetException e) {
-			// not required to set the stack trace to the front end.
-			return ResponseEntity.internalServerError().build();
-		}
-	}
 }

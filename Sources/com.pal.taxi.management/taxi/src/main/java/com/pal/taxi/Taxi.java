@@ -41,7 +41,7 @@ public final class Taxi implements ITaxiInfo {
 		return numberPlate;
 	}
 
-	public TaxiStatus getStatus() {
+	public TaxiStatus getCurrentStatus() {
 		return this.state.getStatus();
 	}
 
@@ -54,7 +54,7 @@ public final class Taxi implements ITaxiInfo {
 	}
 
 	public BookingResponse respondToBooking(BookingRequest request) {
-		if (!TaxiStatus.AVAILABLE.equals(getStatus())) {
+		if (!TaxiStatus.AVAILABLE.equals(getCurrentStatus())) {
 			// in an off chance, where the booking request is sent to a taxi,
 			// handle gracefully, just decline it.
 			return new BookingResponse(request.getUuid(), id, TaxiResponse.REJECTED);

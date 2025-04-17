@@ -1,14 +1,12 @@
 package com.pal.taxi.system;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Optional;
 
 import com.pal.taxi.Taxi;
 import com.pal.taxi.common.booking.BookingRequest;
 import com.pal.taxi.common.validation.ValidationException;
 import com.pal.taxi.system.comm.CommunicationService;
-import com.pal.taxi.system.filter.AvailableTaxiFilter;
 import com.pal.taxi.system.persistence.IPersistenceService;
 
 /**

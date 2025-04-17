@@ -7,7 +7,7 @@ public class AvailableTaxiFilter implements IFilter<Taxi> {
 
 	@Override
 	public boolean test(Taxi taxi) {
-		return TaxiStatus.AVAILABLE.equals(taxi.getStatus());
+		return TaxiStatus.AVAILABLE.equals(taxi.getCurrentStatus());
 	}
 
 }

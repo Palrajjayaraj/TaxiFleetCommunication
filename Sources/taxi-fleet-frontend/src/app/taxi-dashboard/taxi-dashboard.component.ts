@@ -13,6 +13,7 @@ import { CommonService } from '../services/common.service';
 import { StateService } from '../services/state.service';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatInputModule } from '@angular/material/input';
+import { TaxiService } from '../services/taxi.service';
 
 @Component({
   selector: 'app-taxi-dashboard',
@@ -45,7 +46,8 @@ export class TaxiDashboardComponent implements OnInit {
 
   constructor(
     private commonService: CommonService,
-    private stateService: StateService
+    private stateService: StateService,
+    private taxiService: TaxiService
     // private sseService: SseService
   ) {
     this.locationList$ = commonService.getLocations();
@@ -55,7 +57,7 @@ export class TaxiDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loggedInTaxi = this.stateService.currentEntity as Taxi;
     this.locationControl.setValue(this.loggedInTaxi.currentLocation);
-    this.statusControl.setValue(this.loggedInTaxi.status);
+    this.statusControl.setValue(this.loggedInTaxi.currentStatus);
     this.addListeners();
     this.locationList$.subscribe(list => {
       const locations = list;
@@ -76,18 +78,12 @@ export class TaxiDashboardComponent implements OnInit {
   }
 
   onLocationChange(location: Location): void {
-    //   const taxi = this.state.currentTaxi as Taxi;
-    //   this.state.updateCurrentTaxi({
-    //     ...taxi,
-    //     currentLocation: location
-    //   });
+    this.loggedInTaxi.currentLocation = location;
+    this.taxiService.updateTaxiState(this.loggedInTaxi);
   }
 
   onStatusChange(status: TaxiStatus): void {
-    //   const taxi = this.state.currentTaxi as Taxi;
-    //   this.state.updateCurrentTaxi({
-    //     ...taxi,
-    //     status
-    //   });
+    this.loggedInTaxi.currentStatus = status;
+    this.taxiService.updateTaxiState(this.loggedInTaxi);
   }
 }

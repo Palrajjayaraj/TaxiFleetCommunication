@@ -51,7 +51,7 @@ public class PersistenceServiceImpl implements IPersistenceService {
 
 	@Override
 	public void updateTaxiStatus(Taxi taxi) {
-
+		taxiRepository.updateTaxiStatus(taxi);
 	}
 
 	@Override

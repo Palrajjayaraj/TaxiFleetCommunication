@@ -57,7 +57,7 @@ export class CommonService {
   getTaxis(): Observable<Taxi[]> {
     if (!this.taxis) {
       this.taxis = this.http.get<Taxi[]>(this.taxiURL).pipe(
-        map(arr => arr.map(taxi => new Taxi(taxi.id, taxi.numberPlate, taxi.status, taxi.currentLocation))),
+        map(arr => arr.map(taxi => new Taxi(taxi.id, taxi.numberPlate, taxi.currentStatus, taxi.currentLocation))),
         shareReplay(1) // cache the response
       );
     }

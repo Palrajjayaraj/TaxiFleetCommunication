@@ -15,4 +15,6 @@ public interface TaxiMapper {
 	TaxiMapper INSTANCE = Mappers.getMapper(TaxiMapper.class);
 
 	Taxi toTaxi(TaxiEntity entity) throws ValidationException;
+
+	TaxiEntity toEnity(Taxi taxi);
 }

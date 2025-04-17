@@ -16,18 +16,18 @@ export enum TaxiResponse {
 export class Taxi implements INamedEntity{
     id: string;
     numberPlate: string;
-    status: TaxiStatus;
+    currentStatus: TaxiStatus;
     currentLocation: Location;
 
     constructor(
         id: string,
         numberPlate: string,
-        status: TaxiStatus,
+        currentStatus: TaxiStatus,
         currentLocation: Location
     ) {
         this.id = id;
         this.numberPlate = numberPlate;
-        this.status = status;
+        this.currentStatus = currentStatus;
         this.currentLocation = currentLocation;
     }
     get readAbleName(): string {

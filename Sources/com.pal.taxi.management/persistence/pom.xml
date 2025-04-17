@@ -8,9 +8,7 @@
   <artifactId>persistence</artifactId>
   <name>The persistence layer</name>
   <description>The persistence layer, which can connect to DB</description>
-  <properties>
-        <mapstruct.version>1.5.5.Final</mapstruct.version>
-    </properties>
+
   <dependencies>
   	   <!-- Hibernate JPA -->
 		<dependency>
@@ -23,19 +21,6 @@
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <version>42.7.1</version>
-        </dependency>
-
-        <!-- MapStruct (annotations + processor) -->
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct</artifactId>
-            <version>${mapstruct.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.mapstruct</groupId>
-            <artifactId>mapstruct-processor</artifactId>
-            <version>${mapstruct.version}</version>
-            <scope>provided</scope>
         </dependency>
         <dependency>
         	<groupId>com.pal.taxi</groupId>
