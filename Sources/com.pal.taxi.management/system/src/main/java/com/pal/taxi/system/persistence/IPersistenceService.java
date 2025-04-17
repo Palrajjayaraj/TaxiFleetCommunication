@@ -1,6 +1,8 @@
 package com.pal.taxi.system.persistence;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 import com.pal.taxi.Taxi;
 import com.pal.taxi.common.Location;
@@ -24,7 +26,7 @@ public interface IPersistenceService {
 	void updateTaxiStatus(Taxi taxi);
 
 	Collection<Taxi> getAllAvailableTaxis();
-	
+
 	Collection<Taxi> getAllTaxis();
 
 	/**
@@ -36,4 +38,11 @@ public interface IPersistenceService {
 	 * @return All the users from the DB
 	 */
 	Collection<User> getUsers();
+
+	/**
+	 * 
+	 * @param userId The user ID
+	 * @return The user identified by the UserID
+	 */
+	Optional<User> getUser(UUID userId);
 }

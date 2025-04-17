@@ -2,7 +2,9 @@ package com.pal.taxi.persistence.internal;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.TreeSet;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import com.pal.taxi.persistence.entities.UserEntity;
@@ -36,5 +38,16 @@ public class UserRepository extends AbstractRepository<UserEntity> {
 	 */
 	public Collection<User> getAllUsers() {
 		return Collections.unmodifiableCollection(users);
+	}
+
+	/**
+	 * Tries to find user by the given ID. If no user is present, then empty
+	 * optional is returned.
+	 * 
+	 * @param id The ID of the user
+	 * @return
+	 */
+	public Optional<User> getUser(UUID id) {
+		return getAllUsers().stream().filter(u -> u.getUuid().equals(id)).findAny();
 	}
 }

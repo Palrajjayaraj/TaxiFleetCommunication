@@ -52,7 +52,7 @@ export class AdminDashboardComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.dataSource.filterPredicate = (data: Taxi, filter: string): boolean => {
-      return data.status.toLowerCase().includes(filter);
+      return data.currentStatus.toLowerCase().includes(filter);
     };
     this.loadTaxis();
   }

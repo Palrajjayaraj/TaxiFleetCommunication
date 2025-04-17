@@ -21,7 +21,7 @@ public abstract class AbstractRepository<T> {
 	protected abstract Class<T> getEntityClass();
 
 	public List<T> getAll() {
-		try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
 			HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<T> criteria = builder.createQuery(getEntityClass());
 			criteria.from(getEntityClass());
@@ -34,7 +34,7 @@ public abstract class AbstractRepository<T> {
 	 * @return finds the object by this ID and returns it.
 	 */
 	protected T findById(Object id) {
-		try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
 			return session.get(getEntityClass(), id);
 		}
 	}

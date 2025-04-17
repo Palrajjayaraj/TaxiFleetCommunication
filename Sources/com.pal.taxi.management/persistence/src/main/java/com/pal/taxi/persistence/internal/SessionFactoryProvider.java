@@ -12,25 +12,31 @@ import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
 
 import com.pal.taxi.persistence.entities.AppliationInitializationEntity;
+import com.pal.taxi.persistence.entities.BookingEntity;
 import com.pal.taxi.persistence.entities.BookingRequestEntity;
 import com.pal.taxi.persistence.entities.LocationEntity;
 import com.pal.taxi.persistence.entities.TaxiEntity;
 import com.pal.taxi.persistence.entities.UserEntity;
 import com.pal.taxi.persistence.internal.init.DataInitializer;
 
-public class HibernateUtil {
+/**
+ * provides session factory
+ * 
+ * @author Palraj
+ */
+public class SessionFactoryProvider {
 
 	private static final class INSTANCE_HOLDER {
 
-		private static final HibernateUtil INSTANCE = new HibernateUtil();
+		private static final SessionFactoryProvider INSTANCE = new SessionFactoryProvider();
 
 	}
 
-	public static HibernateUtil getInstance() {
+	public static SessionFactoryProvider getInstance() {
 		return INSTANCE_HOLDER.INSTANCE;
 	}
 
-	private HibernateUtil() {
+	private SessionFactoryProvider() {
 		// singleton pattern.
 		try (Session session = sessionFactory.openSession()) {
 			dataInitializer.ensureDataInitialized(session);
@@ -59,6 +65,7 @@ public class HibernateUtil {
 			config.addAnnotatedClass(LocationEntity.class);
 			config.addAnnotatedClass(BookingRequestEntity.class);
 			config.addAnnotatedClass(TaxiEntity.class);
+			config.addAnnotatedClass(BookingEntity.class);
 			ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(config.getProperties())
 					.build();
 			return config.buildSessionFactory(serviceRegistry);

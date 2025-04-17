@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @RestController
-@RequestMapping("/api/taxis")
-public class TaxiSseController {
+@RequestMapping("/notifications/user")
+public class UserSSEController {
 
-    private final TaxiSSEService sseService;
+	private final UserSSEService sseService;
 
-    public TaxiSseController(TaxiSSEService sseService) {
-        this.sseService = sseService;
-    }
+	public UserSSEController(UserSSEService sseService) {
+		this.sseService = sseService;
+	}
 
-    @GetMapping(value = "/subscribe/{taxiId}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter subscribe(@PathVariable UUID taxiId) {
-        return sseService.subscribe(taxiId);
-    }
+	@GetMapping(value = "/bookings/subscribe/{userID}", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
+	public SseEmitter subscribe(@PathVariable UUID userID) {
+		return sseService.subscribe(userID);
+	}
 }

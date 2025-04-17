@@ -1,0 +1,14 @@
+<h1 mat-dialog-title class="dialog-title">Incoming Booking Request</h1>
+<div mat-dialog-content class="dialog-container">
+    <p><strong>Pickup:</strong> {{ data.pickupLocation.readableName }}</p>
+    <p><strong>Dropoff:</strong> {{ data.dropoffLocation.readableName }}</p>
+</div>
+
+<div mat-dialog-actions class="dialog-actions">
+    <button mat-raised-button color="warn" (click)="reject()">
+        <mat-icon>close</mat-icon>&nbsp;Reject
+    </button>
+    <button mat-raised-button color="primary" (click)="accept()">
+        <mat-icon>check_circle</mat-icon>&nbsp;Accept
+    </button>
+</div>

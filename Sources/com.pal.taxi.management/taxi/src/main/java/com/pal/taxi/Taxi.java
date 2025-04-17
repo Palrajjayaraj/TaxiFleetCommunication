@@ -15,7 +15,7 @@ public final class Taxi implements ITaxiInfo {
 		AVAILABLE, BOOKED, RIDING, OFFLINE;
 	}
 
-	enum TaxiResponse {
+	public enum TaxiResponse {
 		ACCEPTED, REJECTED;
 	}
 

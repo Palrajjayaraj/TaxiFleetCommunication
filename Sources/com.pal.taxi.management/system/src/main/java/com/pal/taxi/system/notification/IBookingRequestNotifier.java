@@ -13,4 +13,6 @@ public interface IBookingRequestNotifier {
 	 * @param bookingRequest the booking request to notify about
 	 */
 	public void notifyTaxis(Collection<Taxi> taxis, BookingRequest bookingRequest);
+	
+	
 }

@@ -10,7 +10,7 @@ import com.pal.taxi.system.TaxiFleetManagement;
  * @author Palraj
  */
 @Service
-public class TaxiFleetManagementService {
+public class TaxiFleetManagementServicesFacade {
 
 	private final TaxiFleetManagement management = new TaxiFleetManagement();
 

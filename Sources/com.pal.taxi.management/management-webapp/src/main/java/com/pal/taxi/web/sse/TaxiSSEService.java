@@ -1,32 +1,30 @@
 package com.pal.taxi.web.sse;
 
+import java.io.IOException;
+import java.util.UUID;
+
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
-import java.io.IOException;
-import java.util.Map;
-import java.util.UUID;
-import java.util.concurrent.ConcurrentHashMap;
+import com.pal.taxi.common.booking.BookingRequest;
 
 @Service
-public class TaxiSSEService {
+public class TaxiSSEService extends AbstractSseService {
 
-	private final Map<UUID, SseEmitter> emitters = new ConcurrentHashMap<>();
+	private static final String BOOKING_REQUEST = "booking-request";
 
-	public SseEmitter subscribe(UUID taxiId) {
-		SseEmitter emitter = new SseEmitter(0L); // No timeout
-		emitters.put(taxiId, emitter);
-		emitter.onCompletion(() -> emitters.remove(taxiId));
-		emitter.onTimeout(() -> emitters.remove(taxiId));
-		emitter.onError(e -> emitters.remove(taxiId));
-		return emitter;
-	}
-
-	public void sendToTaxi(UUID taxiId, Object data) {
+	/**
+	 * send the request to the taxi identified by UUID, it is is still subsribed.
+	 * 
+	 * @param taxiId  the taxi to which the request to be sent
+	 * @param request
+	 */
+	public void sendToTaxi(UUID taxiId, BookingRequest request) {
 		SseEmitter emitter = emitters.get(taxiId);
 		if (emitter != null) {
 			try {
-				emitter.send(SseEmitter.event().name("booking-request").data(data));
+				emitter.send(SseEmitter.event().name(BOOKING_REQUEST).data(request, MediaType.APPLICATION_JSON));
 			} catch (IOException e) {
 				emitter.completeWithError(e);
 				emitters.remove(taxiId);

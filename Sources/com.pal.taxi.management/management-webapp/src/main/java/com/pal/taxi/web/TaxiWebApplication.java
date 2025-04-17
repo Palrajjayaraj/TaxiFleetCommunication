@@ -5,7 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.pal.taxi.system.TaxiFleetManagement;
-import com.pal.taxi.web.service.TaxiFleetManagementService;
+import com.pal.taxi.web.service.TaxiFleetManagementServicesFacade;
 
 /**
  * The starting point of the web app.
@@ -15,9 +15,9 @@ import com.pal.taxi.web.service.TaxiFleetManagementService;
 @SpringBootApplication
 public class TaxiWebApplication implements CommandLineRunner {
 
-	private final TaxiFleetManagementService managementService;
+	private final TaxiFleetManagementServicesFacade managementService;
 
-	public TaxiWebApplication(TaxiFleetManagementService managementService) {
+	public TaxiWebApplication(TaxiFleetManagementServicesFacade managementService) {
 		this.managementService = managementService;
 	}
 

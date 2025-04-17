@@ -45,7 +45,7 @@ public class TaxiRepository extends AbstractRepository<TaxiEntity> {
 	 * @return all the available taxis in the system.
 	 */
 	public Collection<Taxi> getAvailableTaxis() {
-		try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
 			HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
 			CriteriaQuery<TaxiEntity> criteria = builder.createQuery(getEntityClass());
 			Root<TaxiEntity> root = criteria.from(getEntityClass());
@@ -61,7 +61,7 @@ public class TaxiRepository extends AbstractRepository<TaxiEntity> {
 	 */
 	public void updateTaxiStatus(Taxi taxi) {
 		TaxiEntity enity = TaxiMapper.INSTANCE.toEnity(taxi);
-		try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
 			Transaction tx = session.beginTransaction();
 			session.merge(enity);
 			tx.commit();

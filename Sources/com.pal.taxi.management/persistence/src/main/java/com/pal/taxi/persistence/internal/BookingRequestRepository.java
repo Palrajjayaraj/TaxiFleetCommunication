@@ -70,7 +70,7 @@ public class BookingRequestRepository extends AbstractRepository<BookingRequestE
 	}
 
 	private void serializeToDB(Collection<BookingRequest> requests) throws TaxiFleetException {
-		try (Session session = HibernateUtil.getInstance().getSessionFactory().openSession()) {
+		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
 			Transaction tx = session.beginTransaction();
 			try {
 				for (BookingRequest request : requests) {

@@ -21,6 +21,13 @@ public class TaxiManager implements IPersistenceServiceConsumer {
 	}
 
 	/**
+	 * @return provides currently available taxis.
+	 */
+	public Collection<Taxi> getAllAvailableTaxis() throws TaxiFleetException {
+		return getPersistenceService().getAllAvailableTaxis();
+	}
+
+	/**
 	 * @param taxi The taxi's state that need to be updated in the system.
 	 * @throws ValidationException
 	 */

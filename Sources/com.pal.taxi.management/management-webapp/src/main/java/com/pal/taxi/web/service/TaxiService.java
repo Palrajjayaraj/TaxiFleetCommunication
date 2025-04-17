@@ -11,7 +11,7 @@ import com.pal.taxi.system.TaxiManager;
  */
 @Service
 public class TaxiService {
-	
+
 	public void updateState(Taxi taxi) throws ValidationException {
 		new TaxiManager().updateState(taxi);
 	}

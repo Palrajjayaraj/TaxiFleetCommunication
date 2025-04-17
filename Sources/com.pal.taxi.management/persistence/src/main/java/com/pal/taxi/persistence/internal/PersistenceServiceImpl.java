@@ -1,6 +1,8 @@
 package com.pal.taxi.persistence.internal;
 
 import java.util.Collection;
+import java.util.Optional;
+import java.util.UUID;
 
 import com.pal.taxi.Taxi;
 import com.pal.taxi.common.Location;
@@ -21,7 +23,7 @@ public class PersistenceServiceImpl implements IPersistenceService {
 	 * available.
 	 */
 	public PersistenceServiceImpl() {
-		HibernateUtil.getInstance();
+		SessionFactoryProvider.getInstance();
 	}
 
 	@Override
@@ -36,7 +38,7 @@ public class PersistenceServiceImpl implements IPersistenceService {
 
 	@Override
 	public void saveBooking(Booking booking) {
-
+		bookingRepository.saveBooking(booking);
 	}
 
 	@Override
@@ -72,6 +74,8 @@ public class PersistenceServiceImpl implements IPersistenceService {
 
 	private final TaxiRepository taxiRepository = new TaxiRepository();
 
+	private final BookingRepository bookingRepository = new BookingRepository();
+
 	@Override
 	public Collection<User> getUsers() {
 		return userRepository.getAllUsers();
@@ -80,6 +84,11 @@ public class PersistenceServiceImpl implements IPersistenceService {
 	@Override
 	public Collection<Taxi> getAllTaxis() {
 		return taxiRepository.getAllTaxis();
+	}
+
+	@Override
+	public Optional<User> getUser(UUID userId) {
+		return userRepository.getUser(userId);
 	}
 
 }
