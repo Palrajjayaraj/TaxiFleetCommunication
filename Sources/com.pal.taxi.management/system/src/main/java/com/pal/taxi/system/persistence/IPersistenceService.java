@@ -24,6 +24,8 @@ public interface IPersistenceService {
 	void updateTaxiStatus(Taxi taxi);
 
 	Collection<Taxi> getAllAvailableTaxis();
+	
+	Collection<Taxi> getAllTaxis();
 
 	/**
 	 * @return All the predefined locations from the DB

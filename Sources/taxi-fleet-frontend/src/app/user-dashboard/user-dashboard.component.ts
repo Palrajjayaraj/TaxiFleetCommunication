@@ -50,7 +50,7 @@ export class UserDashboardComponent implements OnInit {
   filteredDestinations!: Observable<Location[]>;
 
   ngOnInit(): void {
-    this.loggedInUser = this.stateService.currentUser;
+    this.loggedInUser = this.stateService.currentEntity as User;
     this.locationService.getLocations().subscribe(locations => {
       this.allLocations = locations;
       this.filteredSources = this.pickupLocControl.valueChanges.pipe(

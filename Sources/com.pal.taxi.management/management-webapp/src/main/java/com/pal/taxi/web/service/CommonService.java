@@ -4,10 +4,12 @@ import java.util.Collection;
 
 import org.springframework.stereotype.Service;
 
+import com.pal.taxi.Taxi;
 import com.pal.taxi.common.Location;
 import com.pal.taxi.common.TaxiFleetException;
 import com.pal.taxi.common.validation.ValidationException;
 import com.pal.taxi.system.LocationManager;
+import com.pal.taxi.system.TaxiManager;
 import com.pal.taxi.system.UserManager;
 import com.pal.taxi.user.User;
 
@@ -25,6 +27,10 @@ public class CommonService {
 
 	public Collection<User> getAllUsers() throws TaxiFleetException {
 		return new UserManager().getUsers();
+	}
+	
+	public Collection<Taxi> getAllTaxis() throws TaxiFleetException {
+		return new TaxiManager().getAllTaxis();
 	}
 
 }

@@ -1,59 +1,72 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
+import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { MatSelectModule } from '@angular/material/select';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatLabel } from '@angular/material/select';
+import { MatLabel, MatSelectModule } from '@angular/material/select';
+import { Router } from '@angular/router';
 import { Observable } from 'rxjs/internal/Observable';
-import { User } from '../model/user.model';
+import { of } from 'rxjs/internal/observable/of';
+import { INamedEntity } from '../model/readable.model';
+import { Role } from '../model/role.model';
 import { CommonService } from '../services/common.service';
-import { HttpClientModule } from '@angular/common/http';
-import { StateService } from '../services/state.service';
+import { RoleHandlerFactory } from './role.handler';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, FormsModule, MatSelectModule, MatButtonModule, MatFormFieldModule, MatInputModule, HttpClientModule],
-  providers: [CommonService],
+  imports: [CommonModule, FormsModule, MatLabel, MatSelectModule, MatButtonModule, MatFormFieldModule, MatInputModule, HttpClientModule],
+  providers: [RoleHandlerFactory],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
-  role: string = 'user'; // Default role is 'user'
 
-  selectedUser !: User;
+  allRoles: Role[] = Object.values(Role);
 
-  users!: Observable<User[]>;
+  selectedRole: Role = Role.User; // Default role is 'user'
 
-  constructor(private router: Router, private commonService: CommonService, private stateService: StateService
+  entities: Observable<INamedEntity[]> = of([]);
+
+  selectedEntity!: INamedEntity;
+
+  constructor(
+    private handlerFactory: RoleHandlerFactory,
+    private commonService: CommonService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
-    this.users = this.commonService.getUsers();
+    this.entities = this.handlerFactory.getHandler(this.selectedRole).getAllRoleData();
     this.selectDefaultUser();
   }
 
   private selectDefaultUser(): void {
-    this.users.subscribe(userList => {
-      // Try to find Palraj Jayaraj in the list
-      const defaultUser = userList.find(u => u.name === 'Palraj Jayaraj');
-      if (defaultUser) {
-        this.selectedUser = defaultUser;
-      }
+    this.entities.subscribe(userList => {
+      this.selectedEntity = this.handlerFactory.getHandler(this.selectedRole).getDefaultUser(userList);
     });
 
   }
 
-  /**Reacts to the login button click. */
-  onLogin() {
-    if (this.role === 'user') {
-      this.stateService.currentUser = this.selectedUser;
-      this.router.navigate(['/user-dashboard']); // Navigate to the User Dashboard
-    }
+  onRoleChange(newRole: Role): void {
+    this.selectedRole = newRole;
+    const handler = this.handlerFactory.getHandler(newRole);
+    this.entities = handler.getAllRoleData();
+    this.selectDefaultUser();
   }
+
+  /**Reacts to the login button click. */
+  onLogin(): void {
+    const handler = this.handlerFactory.getHandler(this.selectedRole);
+    handler.onSelect(this.selectedEntity);
+    this.router.navigate([handler.getNextPageName()]);
+  }
+  getDisplayText(entity: INamedEntity): string {
+    return entity.readAbleName;
+  }
+
 }
 
 

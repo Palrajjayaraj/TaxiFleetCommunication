@@ -77,4 +77,9 @@ public class PersistenceServiceImpl implements IPersistenceService {
 		return userRepository.getAllUsers();
 	}
 
+	@Override
+	public Collection<Taxi> getAllTaxis() {
+		return taxiRepository.getAllTaxis();
+	}
+
 }

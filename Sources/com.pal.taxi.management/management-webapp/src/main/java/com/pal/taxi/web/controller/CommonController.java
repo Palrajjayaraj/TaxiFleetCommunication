@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pal.taxi.Taxi;
 import com.pal.taxi.common.Location;
 import com.pal.taxi.common.TaxiFleetException;
 import com.pal.taxi.common.ThrowingSupplier;
@@ -32,6 +33,13 @@ public class CommonController {
 	public ResponseEntity<Collection<User>> getUsers() {
 		return wrapAroundEntity(() -> commonService.getAllUsers());
 	}
+	
+
+	@GetMapping("/taxis")
+	public ResponseEntity<Collection<Taxi>> getTaxis() {
+		return wrapAroundEntity(() -> commonService.getAllTaxis());
+	}
+
 
 	private <T> ResponseEntity<T> wrapAroundEntity(ThrowingSupplier<T> supplier) {
 		try {

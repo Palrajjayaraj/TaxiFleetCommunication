@@ -6,19 +6,19 @@
       <div>
         <mat-form-field appearance="fill">
           <mat-label>Select Role</mat-label>
-          <mat-select [(ngModel)]="role" name="role" required>
-            <mat-option value="user">User</mat-option>
-            <mat-option value="admin">Admin</mat-option>
-            <mat-option value="taxi">Taxi</mat-option>
+          <mat-select [(ngModel)]="selectedRole" name="role" required (ngModelChange)="onRoleChange($event)">
+            <mat-option *ngFor="let r of allRoles" [value]="r">
+              {{ r }}
+            </mat-option>
           </mat-select>
         </mat-form-field>
       </div>
       <div>
-        <mat-form-field appearance="fill" *ngIf="role === 'user'">
+        <mat-form-field appearance="fill" *ngIf="entities | async as entitiesList">
           <mat-label>User ID</mat-label>
-          <mat-select [(ngModel)]="selectedUser" name="userId" required>
-            <mat-option *ngFor="let user of users | async" [value]="user">
-              {{ user.name }}
+          <mat-select [(ngModel)]="selectedEntity" name="entity" required>
+            <mat-option *ngFor="let e of entitiesList" [value]="e">
+              {{ getDisplayText(e) }}
             </mat-option>
           </mat-select>
         </mat-form-field>
