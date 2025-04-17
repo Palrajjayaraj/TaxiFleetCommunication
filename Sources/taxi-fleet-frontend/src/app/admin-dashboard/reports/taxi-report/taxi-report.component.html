@@ -1,0 +1,40 @@
+<div class="table-container">
+    <table mat-table [dataSource]="filteredDataSource" matSort class="mat-elevation-z1 full-width-table">
+  
+      <!-- Number Plate -->
+      <ng-container matColumnDef="numberPlate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Number Plate</th>
+        <td mat-cell *matCellDef="let taxi">{{ taxi.numberPlate }}</td>
+      </ng-container>
+  
+      <!-- Status with filter in header -->
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef class="status-header">
+          <div class="status-filter-wrapper">
+            <mat-form-field appearance="outline" class="status-filter-field">
+              <mat-label>Status</mat-label>
+              <mat-select [(value)]="selectedStatus" (selectionChange)="applyStatusFilter()">
+                <mat-option value="">All</mat-option>
+                <mat-option *ngFor="let option of statusOptions" [value]="option">
+                  {{ option }}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+          </div>
+        </th>
+        <td mat-cell *matCellDef="let taxi">{{ taxi.status }}</td>
+      </ng-container>
+  
+      <!-- Location -->
+      <ng-container matColumnDef="location">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header>Location</th>
+        <td mat-cell *matCellDef="let taxi">{{ taxi.location }}</td>
+      </ng-container>
+  
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+  
+  <mat-paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+  
