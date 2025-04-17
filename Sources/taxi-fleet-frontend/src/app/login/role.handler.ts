@@ -57,7 +57,7 @@ export class TaxiRoleHandler implements RoleHandler<Taxi> {
     readonly role = Role.Taxi;
 
     constructor(private taxiService: CommonService, private stateService: StateService) { }
-    
+
     getDefaultUser(taxis: Taxi[]): Taxi {
         return taxis[0];
     }
@@ -75,6 +75,29 @@ export class TaxiRoleHandler implements RoleHandler<Taxi> {
     }
 }
 
+@Injectable({ providedIn: 'root' })
+export class AdminRoleHandler implements RoleHandler<User> {
+    readonly role = Role.Admin;
+
+    constructor(private adminService: CommonService, private stateService: StateService) { }
+
+    getDefaultUser(admins: User[]): User {
+        return admins[0];
+    }
+
+    getAllRoleData(): Observable<User[]> {
+        return this.adminService.getUsers();
+    }
+
+    onSelect(admin: User): void {
+        this.stateService.setState(this.role, admin);
+    }
+
+    getNextPageName(): string {
+        return '/admin-dashboard';
+    }
+}
+
 @Injectable({
     providedIn: 'root'
 })
@@ -84,7 +107,7 @@ export class RoleHandlerFactory {
     constructor(private injector: Injector) {
         this.handlerMap.set(Role.User, this.injector.get(UserRoleHandler));
         this.handlerMap.set(Role.Taxi, this.injector.get(TaxiRoleHandler));
-        // this.handlerMap.set(Role.Admin, this.injector.get(AdminRoleHandler));
+        this.handlerMap.set(Role.Admin, this.injector.get(AdminRoleHandler));
     }
 
     /**

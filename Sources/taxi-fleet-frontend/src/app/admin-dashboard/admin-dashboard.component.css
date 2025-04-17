@@ -1,0 +1,25 @@
+/* Ensure the root layout stretches full height and width */
+:host {
+    display: block;
+    height: 100vh;
+    width: 100vw;
+  }
+  
+  /* Full size for sidenav container */
+  .dashboard-container {
+    height: 100%;
+    width: 100%;
+  }
+  
+  /* Optional: visual polish */
+  .dashboard-sidenav {
+    width: 250px;
+    padding: 1rem;
+    background-color: #fafafa;
+  }
+  
+  .dashboard-content {
+    padding: 2rem;
+    overflow: auto;
+  }
+  
