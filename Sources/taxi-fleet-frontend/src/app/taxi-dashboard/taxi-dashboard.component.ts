@@ -84,6 +84,7 @@ export class TaxiDashboardComponent implements OnInit {
     this.notificationService.listenToBookingConfirmations(this.loggedInTaxi).subscribe(booking => {
       if (booking) {
         this.loggedInTaxi.currentStatus = TaxiStatus.BOOKED;
+        this.onStatusChange(this.loggedInTaxi.currentStatus);
         this.currentBooking$.next(booking);
       }
     });
