@@ -18,7 +18,7 @@ import { BookingService } from '../services/booking.service';
 import { CommonService } from '../services/common.service';
 import { StateService } from '../services/state.service';
 import { TaxiService } from '../services/taxi.service';
-import { BookingEventsService } from '../services/taxi.sse.service';
+import { TaxiBookingEventsService } from '../services/taxi.sse.service';
 import { Booking } from '../model/booking.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 
@@ -59,7 +59,7 @@ export class TaxiDashboardComponent implements OnInit {
     private stateService: StateService,
     private taxiService: TaxiService,
     private bookingService: BookingService,
-    private notificationService: BookingEventsService,
+    private notificationService: TaxiBookingEventsService,
     private dialog: MatDialog
   ) {
     this.locationList$ = commonService.getLocations();
@@ -100,7 +100,6 @@ export class TaxiDashboardComponent implements OnInit {
         });
 
         dialogRef.afterClosed().subscribe(result => {
-          console.log('Dialog closed with result:', result);
           if (result === TaxiResponse.ACCEPTED) {
             this.bookingService.response(new TaxiResponsePayload(this.loggedInTaxi.id, request.uuid, TaxiResponse.ACCEPTED));
           } else {
@@ -130,6 +129,9 @@ export class TaxiDashboardComponent implements OnInit {
   }
 
   onStatusChange(status: TaxiStatus): void {
+    if (this.loggedInTaxi.currentStatus === TaxiStatus.BOOKED && status !== TaxiStatus.BOOKED) {
+      this.currentBooking$.next(null);
+    }
     this.loggedInTaxi.currentStatus = status;
     this.taxiService.updateTaxiState(this.loggedInTaxi);
   }

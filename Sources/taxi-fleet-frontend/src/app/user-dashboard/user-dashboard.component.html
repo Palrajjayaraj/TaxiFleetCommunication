@@ -1,14 +1,22 @@
 <div>
   <h2 class="title">Welcome, {{ loggedInUser.name }}</h2>
 
-  <div *ngIf="activeBooking">
+  <div *ngIf="activeBookingRequest$|async as request" class="booking-request">
     <h3>Your current booking</h3>
-    <p><strong>Status:</strong> {{ activeBooking.status }}</p>
-    <p><strong>From:</strong> {{ activeBooking.pickupLocation.readableName }}</p>
-    <p><strong>To:</strong> {{ activeBooking.dropoffLocation.readableName }}</p>
+    <p><strong>Status:</strong> {{ request.status }}</p>
+    <p><strong>From:</strong> {{ request.pickupLocation.readableName }}</p>
+    <p><strong>To:</strong> {{ request.dropoffLocation.readableName }}</p>
   </div>
 
-  <div *ngIf="!activeBooking" class="booking-form">
+  <div *ngIf="currentBooking$|async as activeBooking" class="booking-request">
+    <h3>Your current booking</h3>
+    <p><strong>Status:</strong> {{ activeBooking.status }}</p>
+    <p><strong>From:</strong> {{ activeBooking.request.pickupLocation.readableName }}</p>
+    <p><strong>To:</strong> {{ activeBooking.request.dropoffLocation.readableName }}</p>
+    <p><strong>Taxi:</strong> {{ activeBooking.taxi.numberPlate }}</p>
+  </div>
+
+  <div *ngIf="(!(activeBookingRequest$|async))&& (!(currentBooking$|async))" class="booking-form">
     <div>
       <mat-form-field appearance="fill" class="form-field">
         <mat-label>Source</mat-label>

@@ -7,13 +7,15 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { Router } from '@angular/router';
-import { map, Observable, startWith } from 'rxjs';
+import { BehaviorSubject, map, Observable, startWith } from 'rxjs';
+import { Booking } from '../model/booking.model';
 import { BookingRequest, UserBookingRequest } from '../model/booking.request.model';
 import { Location } from '../model/location.model';
 import { User } from '../model/user.model';
 import { BookingService } from '../services/booking.service';
 import { CommonService } from '../services/common.service';
 import { StateService } from '../services/state.service';
+import { UserBookingEventsService } from '../services/user.sse.service';
 
 @Component({
   selector: 'app-user-dashboard',
@@ -33,11 +35,13 @@ import { StateService } from '../services/state.service';
 })
 export class UserDashboardComponent implements OnInit {
 
-  constructor(private router: Router, private locationService: CommonService, private bookingService: BookingService, private stateService: StateService) { }
+  constructor(private router: Router, private locationService: CommonService,
+    private bookingService: BookingService, private stateService: StateService,
+    private notificationService: UserBookingEventsService) { }
 
   loggedInUser!: User;
 
-  activeBooking!: BookingRequest;
+  activeBookingRequest$: BehaviorSubject<BookingRequest | null> = new BehaviorSubject<BookingRequest | null>(null);
 
   pickupLocControl = new FormControl<Location | null>(null);
 
@@ -48,6 +52,8 @@ export class UserDashboardComponent implements OnInit {
   filteredSources!: Observable<Location[]>;
 
   filteredDestinations!: Observable<Location[]>;
+
+  currentBooking$: BehaviorSubject<Booking | null> = new BehaviorSubject<Booking | null>(null);
 
   ngOnInit(): void {
     this.loggedInUser = this.stateService.currentEntity as User;
@@ -65,6 +71,15 @@ export class UserDashboardComponent implements OnInit {
       );
     }
     );
+    this.addSseListener();
+  }
+  addSseListener() {
+    this.notificationService.listenToBookingConfirmations(this.loggedInUser).subscribe(booking => {
+      if (booking) {
+        this.currentBooking$.next(booking);
+        this.activeBookingRequest$.next(null);
+      }
+    });
   }
 
   private filterLocations(value: string): Location[] {
@@ -88,7 +103,7 @@ export class UserDashboardComponent implements OnInit {
     const request = new UserBookingRequest(this.loggedInUser.uuid, new Date(), pickUpLoc, dropOffLoc);
     this.bookingService.requestBooking(request).subscribe(
       bookingRequest => {
-        this.activeBooking = bookingRequest;
+        this.activeBookingRequest$.next(bookingRequest);
         alert('Taxi booked successfully!');
       }, error => {
         alert('Taxi booked unsuccessfully!');

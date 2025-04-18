@@ -1,4 +1,3 @@
-// booking-events.service.ts
 import { Injectable, NgZone } from '@angular/core';
 import { Observable } from 'rxjs';
 import { BookingRequest } from '../model/booking.request.model';
@@ -7,12 +6,12 @@ import { Taxi } from '../model/taxi.model';
 import { Booking } from '../model/booking.model';
 
 /**
- * The service which listens to various Booking requests and booking confirmation from server.
+ * The service which listens to various Booking requests and booking confirmation from server, fot taxis.
  */
 @Injectable({
     providedIn: 'root'
 })
-export class BookingEventsService {
+export class TaxiBookingEventsService {
 
     private bookingRequestNotificationsUrl = environment.BASE_URL + 'notifications/taxi/bookingsRequest/subscribe/';
 
@@ -25,11 +24,11 @@ export class BookingEventsService {
     constructor(private zone: NgZone) { }
 
     listenToBookingRequests(taxi: Taxi): Observable<BookingRequest> {
-        return this.createSseObservable<BookingRequest>(taxi.id, this.bookingRequestNotificationsUrl, BookingEventsService.BOOKING_REQUEST);
+        return this.createSseObservable<BookingRequest>(taxi.id, this.bookingRequestNotificationsUrl, TaxiBookingEventsService.BOOKING_REQUEST);
     }
 
     listenToBookingConfirmations(taxi: Taxi): Observable<Booking> {
-        return this.createSseObservable<Booking>(taxi.id, this.bookingConfirmationNotificationsUrl, BookingEventsService.BOOKING_CONFIRM);
+        return this.createSseObservable<Booking>(taxi.id, this.bookingConfirmationNotificationsUrl, TaxiBookingEventsService.BOOKING_CONFIRM);
     }
 
     private createSseObservable<T>(taxiId: string, baseURL: string, eventType: string): Observable<T> {
