@@ -27,12 +27,6 @@ import com.pal.taxi.system.TaxiManager;
  */
 public class BookingRequestsManager {
 
-	private static final int TIMEOUT_FOR_BOOKING_REQUEST_EXPIRY = 60_000; // 1 minute
-
-	private static final int TIMEOUT_FOR_BOOKING_REQUEST_EXPIRY_PER_BATCH = 30_000;
-
-	private static final int MAX_TAXIS_PER_BATCH = 3;
-
 	/** blocking queue so that we are blocked any requests are available. */
 	private final BlockingQueue<BookingRequest> bookingQueue = new LinkedBlockingQueue<>();
 
@@ -43,13 +37,18 @@ public class BookingRequestsManager {
 
 	private final Map<TaxiBookingRequest, CompletableFuture<TaxiResponse>> pendingResponses = new ConcurrentHashMap<>();
 
-	private final TaxiManager taxiManager = new TaxiManager();
+	private final TaxiManager taxiManager;
 
 	private final TaxiFleetManagement managementSystem;
 
-	public BookingRequestsManager(TaxiFleetManagement managementSystem) {
+	private final BookingManagerConfig config;
+
+	public BookingRequestsManager(TaxiFleetManagement managementSystem, TaxiManager taxiManager,
+			BookingManagerConfig config) {
 		this.managementSystem = managementSystem;
-		startProcessingLoop();
+		this.taxiManager = taxiManager;
+		this.config = config;
+		startProcessingIncomingRequests();
 	}
 
 	public void submitBookingRequest(BookingRequest request) {
@@ -64,7 +63,7 @@ public class BookingRequestsManager {
 		}
 	}
 
-	private void startProcessingLoop() {
+	private void startProcessingIncomingRequests() {
 		executor.submit(() -> {
 			while (true) {
 				BookingRequest request = bookingQueue.take();
@@ -76,7 +75,7 @@ public class BookingRequestsManager {
 	private void processBookingRequest(BookingRequest request) throws TaxiFleetException {
 		Set<UUID> processedTaxis = new HashSet<>();
 		long startTime = System.currentTimeMillis();
-		long endTime = startTime + TIMEOUT_FOR_BOOKING_REQUEST_EXPIRY;
+		long endTime = startTime + config.requestTimeoutMillis();
 		while (endTime >= System.currentTimeMillis()) {
 			Collection<Taxi> allAvailableTaxis = taxiManager.getAllAvailableTaxis();
 			// get the available taxi's list again, because, some taxi's might have been
@@ -87,7 +86,7 @@ public class BookingRequestsManager {
 				return;
 			}
 			notifyTaxis(toBeNotifiedTaxis, request);
-			Taxi selectedTaxi = waitForAnyTaxiResponse(request.getUuid(), toBeNotifiedTaxis);
+			Taxi selectedTaxi = waitForAnyAcceptanceResponse(request.getUuid(), toBeNotifiedTaxis);
 			if (null == selectedTaxi) {
 				toBeNotifiedTaxis.stream().map(Taxi::getId).forEach(processedTaxis::add);
 			} else {
@@ -96,11 +95,12 @@ public class BookingRequestsManager {
 				return;
 			}
 		}
+		managementSystem.noTaxiFound(request);
 	}
 
 	private Collection<Taxi> selectTaxisToNotify(Collection<Taxi> availableTaxis, Set<UUID> alreadyTried) {
-		return availableTaxis.stream().filter(taxi -> !alreadyTried.contains(taxi.getId())).limit(MAX_TAXIS_PER_BATCH)
-				.collect(Collectors.toSet());
+		return availableTaxis.stream().filter(taxi -> !alreadyTried.contains(taxi.getId()))
+				.limit(config.maxTaxisPerBatch()).collect(Collectors.toSet());
 	}
 
 	private void notifyTaxis(Collection<Taxi> taxis, BookingRequest request) {
@@ -112,14 +112,14 @@ public class BookingRequestsManager {
 		return taxis.stream().filter(t -> t.getId().equals(taxiID)).findAny().get();
 	}
 
-	private Taxi waitForAnyTaxiResponse(UUID bookingId, Collection<Taxi> taxis) {
+	private Taxi waitForAnyAcceptanceResponse(UUID bookingId, Collection<Taxi> taxis) {
 		Map<TaxiBookingRequest, CompletableFuture<TaxiResponse>> currentBatch = createFutures(bookingId, taxis);
 
 		long startTime = System.currentTimeMillis();
-		long endTime = startTime + TIMEOUT_FOR_BOOKING_REQUEST_EXPIRY_PER_BATCH;
+		long endTime = startTime + config.perBatchTimeoutMillis();
 
 		try {
-			while (System.currentTimeMillis() <= endTime) {
+			while (System.currentTimeMillis() <= endTime && !currentBatch.isEmpty()) {
 				Collection<TaxiBookingRequest> toBeRemovedRequests = new HashSet<>();
 				for (Map.Entry<TaxiBookingRequest, CompletableFuture<TaxiResponse>> entry : currentBatch.entrySet()) {
 					TaxiBookingRequest request = entry.getKey();
@@ -134,8 +134,8 @@ public class BookingRequestsManager {
 							// this is okay, we wait for the others to respond.
 						}
 					}
-					toBeRemovedRequests.forEach(currentBatch::remove);
 				}
+				toBeRemovedRequests.forEach(currentBatch::remove);
 				// sleep after each processing.
 				try {
 					Thread.sleep(100);

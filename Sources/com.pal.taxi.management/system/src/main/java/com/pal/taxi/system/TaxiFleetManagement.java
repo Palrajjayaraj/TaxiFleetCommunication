@@ -13,6 +13,7 @@ import com.pal.taxi.common.booking.Booking;
 import com.pal.taxi.common.booking.BookingRequest;
 import com.pal.taxi.common.booking.BookingRequest.Status;
 import com.pal.taxi.common.validation.ValidationException;
+import com.pal.taxi.system.booking.internal.BookingManagerConfig;
 import com.pal.taxi.system.booking.internal.BookingRequestsManager;
 import com.pal.taxi.system.comm.internal.CommunicationService;
 import com.pal.taxi.system.notification.IBookingListener;
@@ -41,7 +42,8 @@ public class TaxiFleetManagement implements IPersistenceServiceConsumer {
 
 	private final CommunicationService commService = new CommunicationService();
 
-	private final BookingRequestsManager requestsManager = new BookingRequestsManager(this);
+	private final BookingRequestsManager requestsManager = new BookingRequestsManager(this, new TaxiManager(),
+			BookingManagerConfig.defaults());
 
 	/**
 	 * Publishes a new booking request to the system. usually, this is sent from the
