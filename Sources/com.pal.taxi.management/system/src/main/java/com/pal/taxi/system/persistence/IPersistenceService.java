@@ -17,11 +17,11 @@ public interface IPersistenceService {
 
 	void saveBookingRequest(BookingRequest request);
 
-	Collection<BookingRequest> getBookingRequests(Collection<IFilter<BookingRequest>> filters);
+	Collection<BookingRequest> getAllBookingRequests();
 
 	void saveBooking(Booking booking);
 
-	Collection<Booking> getBookings(Collection<IFilter<Booking>> filters);
+	Collection<Booking> getBookings();
 
 	void saveTaxi(Taxi taxi);
 

@@ -10,7 +10,7 @@ import com.pal.taxi.persistence.internal.AppliationInitializationRepository;
 public class DataInitializer {
 
 	private final List<IInitializer> initializers = List.of(new UserDetailsInitializer(), new LocationsInitializer(),
-			new TaxiInitializer());
+			new TaxiInitializer(), new BookingRequestInitializer(), new BookingInitializer());
 
 	public void ensureDataInitialized(Session session) {
 		// run this as a single operation

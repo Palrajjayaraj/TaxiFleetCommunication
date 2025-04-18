@@ -1,8 +1,12 @@
 package com.pal.taxi.persistence.internal;
 
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
+import com.pal.taxi.common.TaxiFleetException;
 import com.pal.taxi.common.booking.BookingRequest;
 import com.pal.taxi.persistence.entities.BookingRequestEntity;
 import com.pal.taxi.persistence.mapper.internal.BookingRequestsMapper;
@@ -39,6 +43,23 @@ public class BookingRequestRepository extends AbstractRepository<BookingRequestE
 			session.flush();
 			session.clear();
 			tx.commit();
+		}
+	}
+
+	/**
+	 * @return all the booking requests from the repository.
+	 */
+	public Collection<BookingRequest> getAllRequests() {
+		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
+			return getAll(session).stream().map(entity -> {
+				try {
+					return BookingRequestsMapper.INSTANCE.toRequest(entity);
+				} catch (TaxiFleetException tfe) {
+					// already validated data only saved in DB.
+					// TODO, what if someone changes in the DB.
+				}
+				return null;
+			}).filter(BookingRequest.class::isInstance).collect(Collectors.toSet());
 		}
 	}
 

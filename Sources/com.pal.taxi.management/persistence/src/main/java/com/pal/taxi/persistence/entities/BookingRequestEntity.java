@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -31,11 +32,11 @@ public class BookingRequestEntity {
 	@Column(nullable = false)
 	private LocalDateTime requestTime;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "pickupLocationId", nullable = false)
 	private LocationEntity pickupLocation;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "dropoffLocationId", nullable = false)
 	private LocationEntity dropoffLocation;
 

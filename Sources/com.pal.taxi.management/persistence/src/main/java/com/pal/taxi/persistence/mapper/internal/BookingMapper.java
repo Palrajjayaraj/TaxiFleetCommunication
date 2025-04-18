@@ -1,7 +1,6 @@
 package com.pal.taxi.persistence.mapper.internal;
 
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 import com.pal.taxi.Taxi;

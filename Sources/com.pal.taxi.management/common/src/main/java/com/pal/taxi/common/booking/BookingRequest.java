@@ -51,7 +51,7 @@ public class BookingRequest {
 	private BookingRequest(UUID requestID, UUID userId, LocalDateTime requestTime, Location pickupLocation,
 			Location dropoffLocation, Status status) {
 		this.uuid = requestID;
-		this.status = Status.PENDING;
+		this.status = status;
 		this.userId = userId;
 		this.requestTime = requestTime;
 		this.pickupLocation = pickupLocation;

@@ -27,15 +27,17 @@ public class BookingRepository extends AbstractRepository<BookingEntity> {
 	 * @return all the bookings from the repository.
 	 */
 	public Collection<Booking> getAllBookings() {
-		return getAll().stream().map(entity -> {
-			try {
-				return BookingMapper.INSTANCE.toBooking(entity);
-			} catch (TaxiFleetException tfe) {
-				// already validated data only saved in DB.
-				// TODO, what if someone changes in the DB.
-			}
-			return null;
-		}).filter(Booking.class::isInstance).collect(Collectors.toSet());
+		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
+			return getAll(session).stream().map(entity -> {
+				try {
+					return BookingMapper.INSTANCE.toBooking(entity);
+				} catch (TaxiFleetException tfe) {
+					// already validated data only saved in DB.
+					// TODO, what if someone changes in the DB.
+				}
+				return null;
+			}).filter(Booking.class::isInstance).collect(Collectors.toSet());
+		}
 	}
 
 	/**

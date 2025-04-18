@@ -104,9 +104,6 @@ export class UserDashboardComponent implements OnInit {
     this.bookingService.requestBooking(request).subscribe(
       bookingRequest => {
         this.activeBookingRequest$.next(bookingRequest);
-        alert('Taxi booked successfully!');
-      }, error => {
-        alert('Taxi booked unsuccessfully!');
       });
   }
 

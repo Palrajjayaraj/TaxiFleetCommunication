@@ -5,7 +5,9 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { BehaviorSubject } from 'rxjs';
 
-import { BookingReportComponent } from './reports/booking-report/booking-report.component';
+
+import { BookingTrendChartComponent } from './reports/booking-trend-chart/booking-trend-chart.component';
+import { BookingConversionChartComponent } from './reports/reports/booking-conversion-chart/booking-conversion-chart.component';
 import { TaxiReportComponent } from './reports/taxi-report/taxi-report.component';
 
 @Component({
@@ -28,7 +30,8 @@ export class AdminDashboardComponent {
 
   reportComponentMap = {
     [ReportType.Taxi]: TaxiReportComponent,
-    [ReportType.Booking]: BookingReportComponent
+    [ReportType.Booking]: BookingTrendChartComponent,
+    [ReportType.Requests_Trend]: BookingConversionChartComponent,
   };
 
   selectedReport$ = new BehaviorSubject<ReportType>(ReportType.Taxi);
@@ -38,6 +41,7 @@ export class AdminDashboardComponent {
   }
 }
 enum ReportType {
-  Taxi = 'Taxi Report',
-  Booking = 'Booking Reports'
+  Taxi = 'Taxi Status',
+  Booking = 'Booking Reports',
+  Requests_Trend = 'Booking Requests Trend',
 }

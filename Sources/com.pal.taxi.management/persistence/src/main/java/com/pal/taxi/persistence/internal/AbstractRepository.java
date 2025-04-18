@@ -20,12 +20,19 @@ public abstract class AbstractRepository<T> {
 	 */
 	protected abstract Class<T> getEntityClass();
 
+	/**
+	 * uses existing session for fetching the data from DB.
+	 */
+	public List<T> getAll(Session session) {
+		HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+		CriteriaQuery<T> criteria = builder.createQuery(getEntityClass());
+		criteria.from(getEntityClass());
+		return session.createQuery(criteria).getResultList();
+	}
+
 	public List<T> getAll() {
 		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
-			HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
-			CriteriaQuery<T> criteria = builder.createQuery(getEntityClass());
-			criteria.from(getEntityClass());
-			return session.createQuery(criteria).getResultList();
+			return getAll(session);
 		}
 	}
 
