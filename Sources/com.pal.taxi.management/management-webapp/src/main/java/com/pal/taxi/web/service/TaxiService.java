@@ -3,7 +3,7 @@ package com.pal.taxi.web.service;
 import org.springframework.stereotype.Service;
 
 import com.pal.taxi.Taxi;
-import com.pal.taxi.common.validation.ValidationException;
+import com.pal.taxi.common.TaxiFleetException;
 import com.pal.taxi.system.TaxiManager;
 
 /**
@@ -12,7 +12,7 @@ import com.pal.taxi.system.TaxiManager;
 @Service
 public class TaxiService {
 
-	public void updateState(Taxi taxi) throws ValidationException {
+	public void updateState(Taxi taxi) throws TaxiFleetException {
 		new TaxiManager().updateState(taxi);
 	}
 
