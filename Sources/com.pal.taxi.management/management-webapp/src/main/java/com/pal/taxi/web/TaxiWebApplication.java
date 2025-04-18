@@ -4,7 +4,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.pal.taxi.system.TaxiFleetManagement;
 import com.pal.taxi.web.service.TaxiFleetManagementServicesFacade;
 
 /**

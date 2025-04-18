@@ -1,12 +1,12 @@
-import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BehaviorSubject } from 'rxjs';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatListModule } from '@angular/material/list';
+import { Component } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { BehaviorSubject } from 'rxjs';
 
-import { TaxiReportComponent } from './reports/taxi-report/taxi-report.component';
 import { BookingReportComponent } from './reports/booking-report/booking-report.component';
+import { TaxiReportComponent } from './reports/taxi-report/taxi-report.component';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -17,16 +17,27 @@ import { BookingReportComponent } from './reports/booking-report/booking-report.
     CommonModule,
     MatSidenavModule,
     MatListModule,
-    MatCardModule,
-    TaxiReportComponent,
-    BookingReportComponent
+    MatCardModule
   ]
 })
 export class AdminDashboardComponent {
-  private selectedReportSubject = new BehaviorSubject<string>('Taxi Report');
-  selectedReport$ = this.selectedReportSubject.asObservable();
 
-  selectReport(report: string): void {
-    this.selectedReportSubject.next(report);
+  ReportType = ReportType;
+
+  reportTypes = Object.values(ReportType);
+
+  reportComponentMap = {
+    [ReportType.Taxi]: TaxiReportComponent,
+    [ReportType.Booking]: BookingReportComponent
+  };
+
+  selectedReport$ = new BehaviorSubject<ReportType>(ReportType.Taxi);
+
+  selectReport(report: ReportType): void {
+    this.selectedReport$.next(report);
   }
+}
+enum ReportType {
+  Taxi = 'Taxi Report',
+  Booking = 'Booking Reports'
 }

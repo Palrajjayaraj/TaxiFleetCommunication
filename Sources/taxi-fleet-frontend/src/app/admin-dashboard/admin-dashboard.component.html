@@ -2,17 +2,12 @@
   <mat-sidenav mode="side" opened class="dashboard-sidenav">
     <h2 class="mat-headline">Admin Dashboard</h2>
     <mat-nav-list>
-      <mat-list-item 
-        (click)="selectReport('Taxi Report')" 
-        [class.active]="(selectedReport$ | async) === 'Taxi Report'">
-        Taxi Report
-      </mat-list-item>
-      <mat-list-item 
-        (click)="selectReport('Booking Reports')" 
-        [class.active]="(selectedReport$ | async) === 'Booking Reports'">
-        Booking Reports
+      <mat-list-item *ngFor="let report of reportTypes" (click)="selectReport(report)"
+        [class.active]="(selectedReport$ | async) === report">
+        {{ report }}
       </mat-list-item>
     </mat-nav-list>
+
   </mat-sidenav>
 
   <mat-sidenav-content class="dashboard-content">
@@ -20,10 +15,7 @@
       <ng-container *ngIf="selectedReport$ | async as selectedReport">
         <mat-card-title>{{ selectedReport }}</mat-card-title>
         <mat-card-content>
-          <ng-container [ngSwitch]="selectedReport">
-            <app-taxi-report *ngSwitchCase="'Taxi Report'"></app-taxi-report>
-            <app-booking-report *ngSwitchCase="'Booking Reports'"></app-booking-report>
-            <div *ngSwitchDefault>Select a report to view.</div>
+          <ng-container *ngIf="reportComponentMap[selectedReport] as component" [ngComponentOutlet]="component">
           </ng-container>
         </mat-card-content>
       </ng-container>
