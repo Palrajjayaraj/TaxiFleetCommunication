@@ -1,7 +1,8 @@
 package com.pal.taxi.persistence.internal;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.nio.file.Paths;
 import java.util.Properties;
 
@@ -54,10 +55,12 @@ public class SessionFactoryProvider {
 			// if we dont go a step back and go again into persistence, when it is loaded
 			// from web-app
 			// it is trying to search for data in the web-app resources folder.
-			File propertyFile = Paths.get("..", "persistence", "src", "main", "resources", "hibernate.properties")
-					.toFile();
-			try (FileInputStream reader = new FileInputStream(propertyFile)) {
-				settings.load(reader);
+			try (InputStream inputStream = SessionFactoryProvider.class.getClassLoader()
+					.getResourceAsStream("hibernate.properties")) {
+				if (inputStream == null) {
+					throw new FileNotFoundException("hibernate.properties not found in classpath");
+				}
+				settings.load(inputStream);
 			}
 			config.setProperties(settings);
 			config.addAnnotatedClass(UserEntity.class);

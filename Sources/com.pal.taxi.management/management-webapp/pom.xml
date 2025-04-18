@@ -9,6 +9,36 @@
   <name>The taxi management's web app Module</name>
   <description>, which contains all the web related functionalities</description>
   
+  <build>
+  <plugins>
+    <!-- Create thin JAR -->
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-jar-plugin</artifactId>
+      <version>3.3.0</version>
+    </plugin>
+
+    <!-- Copy all dependencies to target/libs -->
+    <plugin>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-dependency-plugin</artifactId>
+      <version>3.5.0</version>
+      <executions>
+        <execution>
+          <id>copy-dependencies</id>
+          <phase>package</phase>
+          <goals><goal>copy-dependencies</goal></goals>
+          <configuration>
+            <outputDirectory>${project.build.directory}/libs</outputDirectory>
+            <includeScope>runtime</includeScope>
+          </configuration>
+        </execution>
+      </executions>
+    </plugin>
+  </plugins>
+</build>
+
+  
    <dependencies>
     <dependency>
       <groupId>org.springframework.boot</groupId>
