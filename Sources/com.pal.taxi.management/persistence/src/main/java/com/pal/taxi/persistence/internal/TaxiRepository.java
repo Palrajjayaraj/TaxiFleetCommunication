@@ -13,6 +13,7 @@ import com.pal.taxi.Taxi.TaxiStatus;
 import com.pal.taxi.common.validation.ValidationException;
 import com.pal.taxi.persistence.entities.TaxiEntity;
 import com.pal.taxi.persistence.mapper.internal.TaxiMapper;
+import com.pal.taxi.system.persistence.PersistenceException;
 
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -48,6 +49,8 @@ public class TaxiRepository extends AbstractRepository<TaxiEntity> {
 				return TaxiMapper.INSTANCE.toTaxi(entity);
 			} catch (ValidationException ve) {
 				// DB has the validated data and hence, this exception is not expected.
+				LOGGER.error(ve.getMessage(), ve);
+				// skip this taxi.
 				return null;
 			}
 		}).filter(Taxi.class::isInstance).collect(Collectors.toSet());
@@ -57,27 +60,32 @@ public class TaxiRepository extends AbstractRepository<TaxiEntity> {
 	 * @return all the available taxis in the system.
 	 */
 	public Collection<Taxi> getAvailableTaxis() {
-		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
-			HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
-			CriteriaQuery<TaxiEntity> criteria = builder.createQuery(getEntityClass());
-			Root<TaxiEntity> root = criteria.from(getEntityClass());
-			criteria.select(root).where(builder.equal(root.get("currentStatus"), TaxiStatus.AVAILABLE));
-			return toTaxis(session.createQuery(criteria).getResultList());
-		}
+		return lockRunner.runWithReadLock(() -> {
+			try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
+				HibernateCriteriaBuilder builder = session.getCriteriaBuilder();
+				CriteriaQuery<TaxiEntity> criteria = builder.createQuery(getEntityClass());
+				Root<TaxiEntity> root = criteria.from(getEntityClass());
+				criteria.select(root).where(builder.equal(root.get("currentStatus"), TaxiStatus.AVAILABLE));
+				return toTaxis(session.createQuery(criteria).getResultList());
+			}
+		});
 	}
 
 	/**
 	 * Updates the taxi status such as state and location to the DB.
 	 * 
 	 * @param taxi The taxi.
+	 * @throws PersistenceException if anything goes wrong during persisting.
 	 */
-	public void updateTaxiStatus(Taxi taxi) {
-		TaxiEntity enity = TaxiMapper.INSTANCE.toEnity(taxi);
-		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
-			Transaction tx = session.beginTransaction();
-			session.merge(enity);
-			tx.commit();
-		}
+	public void updateTaxiStatus(Taxi taxi) throws PersistenceException {
+		runWithWriteLock(() -> {
+			TaxiEntity enity = TaxiMapper.INSTANCE.toEnity(taxi);
+			try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
+				Transaction tx = session.beginTransaction();
+				session.merge(enity);
+				tx.commit();
+			}
+		});
 	}
 
 	/**
@@ -87,13 +95,15 @@ public class TaxiRepository extends AbstractRepository<TaxiEntity> {
 	 * @return optional containing the taxi or empty, if not found.
 	 */
 	public Optional<TaxiEntity> findByNumberPlate(String numberPlate) {
-		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
-			CriteriaBuilder cb = session.getCriteriaBuilder();
-			CriteriaQuery<TaxiEntity> cq = cb.createQuery(TaxiEntity.class);
-			Root<TaxiEntity> root = cq.from(TaxiEntity.class);
-			cq.select(root).where(cb.equal(root.get("numberPlate"), numberPlate));
-			return session.createQuery(cq).uniqueResultOptional();
-		}
+		return lockRunner.runWithReadLock(() -> {
+			try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
+				CriteriaBuilder cb = session.getCriteriaBuilder();
+				CriteriaQuery<TaxiEntity> cq = cb.createQuery(TaxiEntity.class);
+				Root<TaxiEntity> root = cq.from(TaxiEntity.class);
+				cq.select(root).where(cb.equal(root.get("numberPlate"), numberPlate));
+				return session.createQuery(cq).uniqueResultOptional();
+			}
+		});
 	}
 
 }

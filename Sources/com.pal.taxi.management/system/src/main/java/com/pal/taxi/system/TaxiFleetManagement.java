@@ -18,6 +18,7 @@ import com.pal.taxi.system.comm.internal.CommunicationService;
 import com.pal.taxi.system.notification.IBookingListener;
 import com.pal.taxi.system.notification.IBookingRequestNotifier;
 import com.pal.taxi.system.persistence.IPersistenceService;
+import com.pal.taxi.system.persistence.PersistenceException;
 import com.pal.taxi.user.User;
 
 /**
@@ -47,11 +48,12 @@ public class TaxiFleetManagement implements IPersistenceServiceConsumer {
 	 * user to the system.
 	 * 
 	 * @param request the booking request to be published
+	 * @throws PersistenceException from persistence layer.
 	 */
-	public void publishBookingRequest(BookingRequest request) {
-		persistenceService.ifPresent(service -> {
-			service.createBookingRequest(request);
-		});
+	public void publishBookingRequest(BookingRequest request) throws PersistenceException {
+		if (persistenceService.isPresent()) {
+			persistenceService.get().createBookingRequest(request);
+		}
 		requestsManager.submitBookingRequest(request);
 	}
 

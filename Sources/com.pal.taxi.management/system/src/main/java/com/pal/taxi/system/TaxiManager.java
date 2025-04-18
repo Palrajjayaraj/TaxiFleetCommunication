@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import com.pal.taxi.Taxi;
 import com.pal.taxi.common.TaxiFleetException;
-import com.pal.taxi.common.validation.ValidationException;
 
 /**
  * The manager which manages the states of varius taxis.
@@ -29,9 +28,9 @@ public class TaxiManager implements IPersistenceServiceConsumer {
 
 	/**
 	 * @param taxi The taxi's state that need to be updated in the system.
-	 * @throws ValidationException
+	 * @throws TaxiFleetException
 	 */
-	public void updateState(Taxi taxi) throws ValidationException {
+	public void updateState(Taxi taxi) throws TaxiFleetException {
 		getPersistenceService().updateTaxiStatus(taxi);
 	}
 

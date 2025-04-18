@@ -1,9 +1,11 @@
 package com.pal.taxi.common.lock;
 
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import com.pal.taxi.common.TaxiFleetException;
+import com.pal.taxi.common.ThrowingRunnable;
 
 import lombok.NonNull;
 
@@ -30,7 +32,21 @@ public class LockRunner {
 	}
 
 	/** Runs the given code after acquiring the write lock. */
-	public void runWithWriteLock(@NonNull IRunnable code) throws TaxiFleetException {
+	public void runWithWriteLock(@NonNull ThrowingRunnable code) throws TaxiFleetException {
+		try {
+			this.lock.writeLock().lock();
+			code.run();
+		} finally {
+			this.lock.writeLock().unlock();
+		}
+	}
+
+	/**
+	 * Runs the given code after acquiring the write lock, provides functionality to
+	 * convert to a speific exeption.
+	 */
+	public <TH extends TaxiFleetException> void runWithWriteLock(@NonNull IRunnable<TH> code,
+			Function<TaxiFleetException, TH> toSpecificException) throws TH {
 		try {
 			this.lock.writeLock().lock();
 			code.run();

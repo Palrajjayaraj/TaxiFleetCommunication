@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import com.pal.taxi.Taxi;
 import com.pal.taxi.common.Location;
+import com.pal.taxi.common.TaxiFleetException;
 import com.pal.taxi.common.booking.Booking;
 import com.pal.taxi.common.booking.BookingRequest;
 import com.pal.taxi.system.persistence.IPersistenceService;
@@ -27,12 +28,12 @@ public class PersistenceServiceImpl implements IPersistenceService {
 	}
 
 	@Override
-	public void createBookingRequest(BookingRequest request) {
+	public void createBookingRequest(BookingRequest request) throws PersistenceException {
 		bookingRequestRepo.createBookingRequest(request);
 	}
 
 	@Override
-	public void saveBookingRequest(BookingRequest request) {
+	public void saveBookingRequest(BookingRequest request) throws PersistenceException {
 		bookingRequestRepo.saveBookingRequest(request);
 	}
 
@@ -42,7 +43,7 @@ public class PersistenceServiceImpl implements IPersistenceService {
 	}
 
 	@Override
-	public void saveBooking(Booking booking) throws PersistenceException {
+	public void saveBooking(Booking booking) throws TaxiFleetException {
 		bookingRepository.saveBooking(booking);
 	}
 
@@ -57,7 +58,7 @@ public class PersistenceServiceImpl implements IPersistenceService {
 	}
 
 	@Override
-	public void updateTaxiStatus(Taxi taxi) {
+	public void updateTaxiStatus(Taxi taxi)  throws PersistenceException{
 		taxiRepository.updateTaxiStatus(taxi);
 	}
 

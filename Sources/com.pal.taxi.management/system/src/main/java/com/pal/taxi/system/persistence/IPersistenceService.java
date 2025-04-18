@@ -6,25 +6,26 @@ import java.util.UUID;
 
 import com.pal.taxi.Taxi;
 import com.pal.taxi.common.Location;
+import com.pal.taxi.common.TaxiFleetException;
 import com.pal.taxi.common.booking.Booking;
 import com.pal.taxi.common.booking.BookingRequest;
 import com.pal.taxi.user.User;
 
 public interface IPersistenceService {
 
-	void createBookingRequest(BookingRequest request);
+	void createBookingRequest(BookingRequest request) throws PersistenceException;
 
-	void saveBookingRequest(BookingRequest request);
+	void saveBookingRequest(BookingRequest request) throws PersistenceException;
 
 	Collection<BookingRequest> getAllBookingRequests();
 
-	void saveBooking(Booking booking) throws PersistenceException;
+	void saveBooking(Booking booking) throws TaxiFleetException;
 
 	Collection<Booking> getBookings();
 
 	void saveTaxi(Taxi taxi);
 
-	void updateTaxiStatus(Taxi taxi);
+	void updateTaxiStatus(Taxi taxi) throws PersistenceException;
 
 	Collection<Taxi> getAllAvailableTaxis();
 

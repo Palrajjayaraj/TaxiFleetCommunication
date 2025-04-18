@@ -38,18 +38,20 @@ public class BookingRepository extends AbstractRepository<BookingEntity> {
 	 * @return all the bookings from the repository.
 	 */
 	public Collection<Booking> getAllBookings() {
-		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
-			return getAll(session).stream().map(entity -> {
-				try {
-					return BookingMapper.INSTANCE.toBooking(entity);
-				} catch (TaxiFleetException tfe) {
-					// already validated data only saved in DB.
-					// TODO, what if someone changes in the DB.
-					LOGGER.error("Failed to fetch bookings", tfe);
-				}
-				return null;
-			}).filter(Booking.class::isInstance).collect(Collectors.toSet());
-		}
+		return lockRunner.runWithReadLock(() -> {
+			try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
+				return getAll(session).stream().map(entity -> {
+					try {
+						return BookingMapper.INSTANCE.toBooking(entity);
+					} catch (TaxiFleetException tfe) {
+						// already validated data only saved in DB.
+						// TODO, what if someone changes in the DB.
+						LOGGER.error("Failed to fetch bookings", tfe);
+					}
+					return null;
+				}).filter(Booking.class::isInstance).collect(Collectors.toSet());
+			}
+		});
 	}
 
 	/**
@@ -59,14 +61,16 @@ public class BookingRepository extends AbstractRepository<BookingEntity> {
 	 * @throws PersistenceException
 	 */
 	public void saveBooking(Booking booking) throws PersistenceException {
-		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
-			Transaction tx = session.beginTransaction();
-			BookingEntity entity = BookingMapper.INSTANCE.toEntity(booking);
-			session.persist(entity);
-			session.flush();
-			session.clear();
-			tx.commit();
-		}
+		runWithWriteLock(() -> {
+			try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
+				Transaction tx = session.beginTransaction();
+				BookingEntity entity = BookingMapper.INSTANCE.toEntity(booking);
+				session.persist(entity);
+				session.flush();
+				session.clear();
+				tx.commit();
+			}
+		});
 	}
 
 }
