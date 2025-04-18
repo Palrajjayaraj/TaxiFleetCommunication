@@ -9,6 +9,7 @@ import com.pal.taxi.common.Location;
 import com.pal.taxi.common.booking.Booking;
 import com.pal.taxi.common.booking.BookingRequest;
 import com.pal.taxi.system.persistence.IPersistenceService;
+import com.pal.taxi.system.persistence.PersistenceException;
 import com.pal.taxi.user.User;
 
 /**
@@ -41,7 +42,7 @@ public class PersistenceServiceImpl implements IPersistenceService {
 	}
 
 	@Override
-	public void saveBooking(Booking booking) {
+	public void saveBooking(Booking booking) throws PersistenceException {
 		bookingRepository.saveBooking(booking);
 	}
 
@@ -70,15 +71,15 @@ public class PersistenceServiceImpl implements IPersistenceService {
 		return locationRepository.getAllLocations();
 	}
 
-	private final LocationRepository locationRepository = new LocationRepository();
+	private final LocationRepository locationRepository = RepositoryRegistry.getLocationRepository();
 
-	private final UserRepository userRepository = new UserRepository();
+	private final UserRepository userRepository = RepositoryRegistry.getUserRepository();
 
-	private final BookingRequestRepository bookingRequestRepo = new BookingRequestRepository();
+	private final BookingRequestRepository bookingRequestRepo = RepositoryRegistry.getBookingRequestRepository();
 
-	private final TaxiRepository taxiRepository = new TaxiRepository();
+	private final TaxiRepository taxiRepository = RepositoryRegistry.getTaxiRepository();
 
-	private final BookingRepository bookingRepository = new BookingRepository();
+	private final BookingRepository bookingRepository = RepositoryRegistry.getBookingRepository();
 
 	@Override
 	public Collection<User> getUsers() {

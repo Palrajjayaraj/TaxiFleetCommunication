@@ -8,7 +8,6 @@ import com.pal.taxi.Taxi;
 import com.pal.taxi.common.Location;
 import com.pal.taxi.common.booking.Booking;
 import com.pal.taxi.common.booking.BookingRequest;
-import com.pal.taxi.system.filter.IFilter;
 import com.pal.taxi.user.User;
 
 public interface IPersistenceService {
@@ -19,7 +18,7 @@ public interface IPersistenceService {
 
 	Collection<BookingRequest> getAllBookingRequests();
 
-	void saveBooking(Booking booking);
+	void saveBooking(Booking booking) throws PersistenceException;
 
 	Collection<Booking> getBookings();
 

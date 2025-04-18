@@ -18,6 +18,16 @@ import com.pal.taxi.user.User;
  */
 public class UserRepository extends AbstractRepository<UserEntity> {
 
+	private UserRepository() {
+		// single instance of repository.
+	}
+
+	private static final UserRepository SINGLE_INSTANCE = new UserRepository();
+
+	public static UserRepository getInstance() {
+		return SINGLE_INSTANCE;
+	}
+
 	@Override
 	protected Class<UserEntity> getEntityClass() {
 		return UserEntity.class;

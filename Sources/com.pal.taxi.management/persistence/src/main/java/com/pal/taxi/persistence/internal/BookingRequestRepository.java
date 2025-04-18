@@ -19,6 +19,16 @@ import com.pal.taxi.persistence.mapper.internal.BookingRequestsMapper;
  */
 public class BookingRequestRepository extends AbstractRepository<BookingRequestEntity> {
 
+	private BookingRequestRepository() {
+		// single instance of repository.
+	}
+
+	private static final BookingRequestRepository SINGLE_INSTANCE = new BookingRequestRepository();
+
+	public static BookingRequestRepository getInstance() {
+		return SINGLE_INSTANCE;
+	}
+
 	@Override
 	protected Class<BookingRequestEntity> getEntityClass() {
 		return BookingRequestEntity.class;
@@ -57,6 +67,7 @@ public class BookingRequestRepository extends AbstractRepository<BookingRequestE
 				} catch (TaxiFleetException tfe) {
 					// already validated data only saved in DB.
 					// TODO, what if someone changes in the DB.
+					LOGGER.error("Failed to fetch bookings", tfe);
 				}
 				return null;
 			}).filter(BookingRequest.class::isInstance).collect(Collectors.toSet());

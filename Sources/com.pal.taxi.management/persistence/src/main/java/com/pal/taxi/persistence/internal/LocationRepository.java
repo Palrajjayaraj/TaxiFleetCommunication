@@ -16,6 +16,16 @@ import com.pal.taxi.persistence.mapper.internal.LocationMapper;
  */
 public class LocationRepository extends AbstractRepository<LocationEntity> {
 
+	private LocationRepository() {
+		// single instance of repository.
+	}
+
+	private static final LocationRepository SINGLE_INSTANCE = new LocationRepository();
+
+	public static LocationRepository getInstance() {
+		return SINGLE_INSTANCE;
+	}
+
 	@Override
 	protected Class<LocationEntity> getEntityClass() {
 		return LocationEntity.class;

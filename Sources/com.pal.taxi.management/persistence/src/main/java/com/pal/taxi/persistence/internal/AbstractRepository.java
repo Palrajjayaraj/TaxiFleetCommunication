@@ -4,6 +4,8 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.query.criteria.HibernateCriteriaBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import jakarta.persistence.criteria.CriteriaQuery;
 
@@ -14,6 +16,9 @@ import jakarta.persistence.criteria.CriteriaQuery;
  * @param <T> The type of the data.
  */
 public abstract class AbstractRepository<T> {
+
+	/** logger for logging in the repositories. */
+	protected static final Logger LOGGER = LoggerFactory.getLogger(AbstractRepository.class);
 
 	/**
 	 * @return The class of the entity. Must not be {@code null}
@@ -40,7 +45,7 @@ public abstract class AbstractRepository<T> {
 	 * @param id The ID of the object
 	 * @return finds the object by this ID and returns it.
 	 */
-	protected T findById(Object id) {
+	public T findById(Object id) {
 		try (Session session = SessionFactoryProvider.getInstance().getSessionFactory().openSession()) {
 			return session.get(getEntityClass(), id);
 		}
