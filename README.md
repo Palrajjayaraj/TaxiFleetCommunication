@@ -56,4 +56,4 @@ Other readme such as architectural design and user guide shall be found in
 [📄 Reflection README](reflectionReadme.md)
 
 ## Known issue
-### Filtering of location does not work as expected. Please use the combo boz as combo box.
+### Filtering of location does not work as expected. Please use the filtering combo boz as combo box for location in users and admin.
