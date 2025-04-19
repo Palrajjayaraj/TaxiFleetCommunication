@@ -32,6 +32,8 @@ The software that implements the communication for a taxi fleet company which pr
 
 ## Running with Docker
 
+Clone the Git repository and run the following command.
+
 Rebuild and start the application by running the following command. The command internally installs the container and compiles the backend and frontened and invokes both the backend and frontend.
 
 ```
