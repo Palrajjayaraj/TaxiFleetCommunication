@@ -15,7 +15,7 @@ services:
 
   backend:
     build:
-      context: ./com.pal.taxi.management
+      context: ./Sources/com.pal.taxi.management
     ports:
       - "8080:8080"
     depends_on:
@@ -23,7 +23,7 @@ services:
 
   frontend:
     build:
-      context: ./taxi-fleet-frontend
+      context: ./Sources/taxi-fleet-frontend
     ports:
       - "4200:80"
     depends_on:
