@@ -1,6 +1,8 @@
 @startuml classDigram
 
 class Location {
+    +id: Integer
+    +readableName: String
     +latitude: double
     +longitude: double
 }
@@ -8,10 +10,8 @@ class Location {
 class User {
     +id: Integer
     +name: String
-    +requestBooking(pickup: Location, dropoff: Location): BookingRequest
-    +viewBookingStatus(request: BookingRequest): void
-    +cancelBooking(cancelBooking: BookingRequest): void
-} 
+}
+
 
 package "Booking" {
     enum RequestStatus {
@@ -26,8 +26,8 @@ package "Booking" {
     }
 
     class BookingRequest {
-        +id: Integer
-        +user: User
+        +id: UUID
+        +userID: UUID
         +pickupLocation: Location
         +dropoffLocation: Location
         +requestTime: DateTime
@@ -35,7 +35,8 @@ package "Booking" {
     }
 
     class BookingResponse {
-        +id: requestID
+        +requestID: requestID
+        +taxiID: UUID
         +response: TaxiResponse
     }
 
@@ -47,17 +48,11 @@ package "Booking" {
     }
 
     class Booking {
-        +id: Integer
+        +uuid: UUID
         +request: BookingRequest
         +assignedTaxi: Taxi
         +bookingTime: DateTime
         +status: BookingStatus
-        
-        +assignTaxi(taxi: Taxi): void
-        +cancel(): void
-        +complete(): double
-        +calculateFare(): double
-        +updateStatus(newStatus: BookingStatus): void
     }
 
     BookingRequest "1" --> "0..1" Booking : "Becomes"
@@ -75,55 +70,35 @@ package Taxi {
         +id: Integer
         +numberPlate: String
         +status: TaxiStatus
-        +updateStatus(): void
-        +getCurrentLocation(): Location
-        +respondToBooking(request: BookingRequest): BookingResponse
     }
 }
 
-package "Fleet Management" {
-    interface Filter {
-        +apply(item: T): Boolean
-    }
-
-    class BookingCenter {
-        +publishBooking(booking: BookingRequest): void
-        +queryBooking(filters: Collection<Filter<Booking>>): Collection<Booking>
-        +handleTaxiResponse(response: BookingResponse): void
-    }
-
-    class TaxiFleet {
-        +queryTaxis(filters: Collection<Filter<Taxi>>): Collection<Taxi>
-        +getAvailableTaxis(): List<Taxi>
-        +updateTaxiStatus(taxi: Taxi): void
-    }
+package "Fleet Management System" {
 
     class CommunicationService {
-        +publishBookingRequest(request: BookingRequest): void
-        +notifyTaxis(taxis: List<Taxi>, bookingRequest: BookingRequest): void
-        +getLocation(taxi:Taxi): Location
-        +getTaxiStatus(taxi: Taxi): TaxiStatus
+        +notifyTaxis(taxis: Collection<Taxi>, bookingRequest: BookingRequest): void
+        +notifyTaxi(booking: Booking, taxi: Taxi, user: User): void
     }
-
-    class DashboardService {
-        +generateBookingStats(filters: Collection<Filter<Booking>>): Collection<Booking>
-        +generateTaxiStats(filters: Collection<Filter<Taxi>>): Collection<Taxi>
-    }
-
-    class Dashboard {
-        +renderInitialDashboard(): void
-        +displayBookingStats(bookingData: Collection<Booking>): void
-        +displayTaxiStats(taxiData: Collection<Taxi>): void
+    class TaxiFleetManagement {
+        +initialize(): void
+        +publishBooking(booking: BookingRequest): void
+        +notifyTaxis(taxis: Collection<Taxi>, bookingRequest: BookingRequest): void
+        +bookTaxi(request:BookingRequest, taxi : Taxi) : void
+        +processTaxiResponse(response: BookingResponse): void
     }
 
     interface IPersistenceService {
+        +createBookingRequest(request: BookingRequest): void
         +saveBookingRequest(request: BookingRequest): void
-        +getBookingRequests(filters: Collection<Filter<BookingRequest>>): Collection<BookingRequest>
+        +getAllBookingRequests(): Collection<BookingRequest>
         +saveBooking(booking: Booking): void
-        +getBookings(filters: Collection<Filter<Booking>>): Collection<Booking>
+        +getAllBookings(): Collection<Booking>
         +saveTaxi(taxi: Taxi): void
         +updateTaxiStatus(taxi: Taxi): void
-        +getTaxis(filters: Collection<Filter<Taxi>>): Collection<Taxi>
+        +getAllAvailableTaxis(): Collection<Taxi>
+        +getAllTaxis(): Collection<Taxi>
+        +getLocations(): Collection<Location>
+        +getUsers(): Collection<User>
     }
 }
 
