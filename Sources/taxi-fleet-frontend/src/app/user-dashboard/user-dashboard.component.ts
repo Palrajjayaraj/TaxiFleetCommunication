@@ -104,7 +104,7 @@ export class UserDashboardComponent implements OnInit {
       alert('Please select valid Pickup and Drop off location.');
       return;
     }
-    if(pickUpLoc === dropOffLoc){
+    if (pickUpLoc === dropOffLoc) {
       alert('Pickup and Drop off locations cannot be same.');
       return;
     }
@@ -114,5 +114,14 @@ export class UserDashboardComponent implements OnInit {
         this.activeBookingRequest$.next(bookingRequest);
       });
   }
+
+  validateSelected(control: FormControl<Location | null>) {
+    const selected = control.value;
+    const match = this.allLocations.find(loc => loc === selected);
+    if (!match) {
+      control.setValue(null);
+    }
+  }
+
 
 }
