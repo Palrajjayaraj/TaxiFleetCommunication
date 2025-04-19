@@ -1,0 +1,35 @@
+@startuml bookingBooking
+actor User
+participant "Booking Requests Manager" as BookingMGR
+participant "Taxi Booking Manager" as TaxiMGR
+participant "TaxiFleeT Management" as FleeTaxiMGRanagement
+participant "Taxi" as Taxi
+
+User -> BookingMGR : submitBookingRequest(request)
+activate BookingMGR
+BookingMGR -> BookingMGR : bookingQueue.offer(request)
+BookingMGR -> BookingMGR : processBookingRequest(request)
+loop until timeout
+    BookingMGR -> TaxiMGR : getAllAvailableTaxis()
+    TaxiMGR --> BookingMGR : list<Taxi>
+    BookingMGR -> BookingMGR : selectTaxisToNotify()
+    alt No taxis available
+        BookingMGR -> FleeTaxiMGRanagement : noTaxiFound(request)
+        deactivate BookingMGR
+        return
+    end
+    BookingMGR -> FleeTaxiMGRanagement : notifyTaxis(taxis, request)
+    group waiting for response
+        BookingMGR -> BookingMGR : waitForAnyAcceptanceResponse()
+        alt Taxi accepted
+            BookingMGR -> FleeTaxiMGRanagement : bookTaxi(request, taxi)
+            deactivate BookingMGR
+            return
+        else All declined / timed out
+            BookingMGR -> BookingMGR : markTaxis as processed
+        end
+    end
+end
+BookingMGR -> FleeTaxiMGRanagement : noTaxiFound(request)
+deactivate BookingMGR
+@enduml

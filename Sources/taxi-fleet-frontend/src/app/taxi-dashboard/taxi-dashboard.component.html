@@ -4,7 +4,8 @@
         <div class="form-grid">
             <mat-form-field appearance="fill">
                 <mat-label>Location</mat-label>
-                <input type="text" matInput [formControl]="locationControl" [matAutocomplete]="sourceAuto">
+                <input type="text" matInput [formControl]="locationControl" [matAutocomplete]="sourceAuto"
+                    (blur)="validateSelected(locationControl)">
                 <mat-autocomplete #sourceAuto="matAutocomplete" [displayWith]="displayLocationName">
                     <mat-option *ngFor="let location of locationList$ | async" [value]="location">
                         {{ location.readableName }}

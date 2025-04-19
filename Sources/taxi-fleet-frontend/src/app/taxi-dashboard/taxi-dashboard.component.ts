@@ -9,8 +9,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { MatSelectModule } from '@angular/material/select';
+import { Router } from '@angular/router';
+import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
 import { Observable } from 'rxjs/internal/Observable';
 import { BookingRequestDialogComponent } from '../booking-request-dialog/booking-request-dialog.component';
+import { Booking } from '../model/booking.model';
 import { Location } from '../model/location.model';
 import { Taxi, TaxiResponse, TaxiStatus } from '../model/taxi.model';
 import { TaxiResponsePayload } from '../model/taxi.response.model';
@@ -19,9 +22,6 @@ import { CommonService } from '../services/common.service';
 import { StateService } from '../services/state.service';
 import { TaxiService } from '../services/taxi.service';
 import { TaxiBookingEventsService } from '../services/taxi.sse.service';
-import { Booking } from '../model/booking.model';
-import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
-import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-taxi-dashboard',
@@ -46,6 +46,8 @@ export class TaxiDashboardComponent implements OnInit {
   loggedInTaxi!: Taxi;
 
   locationList$: Observable<Location[]>;
+
+  allLocations: Location[] = [];
 
   locationControl = new FormControl<Location | null>(null);
 
@@ -74,12 +76,10 @@ export class TaxiDashboardComponent implements OnInit {
       this.router.navigate(['login']);
     }
     this.locationControl.setValue(this.loggedInTaxi.currentLocation);
-    this.statusControl.setValue(this.loggedInTaxi.currentStatus);
+    this.onStatusChange(TaxiStatus.AVAILABLE);
     this.addListeners();
     this.addSseListeners();
-    this.locationList$.subscribe(list => {
-      const locations = list;
-    });
+    this.locationList$.subscribe(list => this.allLocations = list);
   }
   addSseListeners() {
     this.addBookingRequestListener();
@@ -130,8 +130,10 @@ export class TaxiDashboardComponent implements OnInit {
   }
 
   onLocationChange(location: Location): void {
-    this.loggedInTaxi.currentLocation = location;
-    this.taxiService.updateTaxiState(this.loggedInTaxi);
+    if (this.isValidLocation(location)) {
+      this.loggedInTaxi.currentLocation = location;
+      this.taxiService.updateTaxiState(this.loggedInTaxi);
+    }
   }
 
   onStatusChange(status: TaxiStatus): void {
@@ -140,5 +142,17 @@ export class TaxiDashboardComponent implements OnInit {
     }
     this.loggedInTaxi.currentStatus = status;
     this.taxiService.updateTaxiState(this.loggedInTaxi);
+  }
+
+  private isValidLocation(location: Location): boolean {
+    const match = this.allLocations.find(loc => loc === location);
+    return match ? true : false;
+  }
+
+  validateSelected(control: FormControl<Location | null>) {
+    const selectedLocation = control.value;
+    if (selectedLocation && !this.isValidLocation(selectedLocation)) {
+      control.setValue(this.loggedInTaxi.currentLocation);
+    }
   }
 }

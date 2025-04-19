@@ -115,13 +115,16 @@ export class UserDashboardComponent implements OnInit {
       });
   }
 
+  private isValidLocation(location: Location): boolean {
+    const match = this.allLocations.find(loc => loc === location);
+    return match ? true : false;
+  }
+
   validateSelected(control: FormControl<Location | null>) {
-    const selected = control.value;
-    const match = this.allLocations.find(loc => loc === selected);
-    if (!match) {
+    const selectedLocation = control.value;
+    if (selectedLocation && !this.isValidLocation(selectedLocation)) {
       control.setValue(null);
     }
   }
-
 
 }
