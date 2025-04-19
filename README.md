@@ -45,3 +45,8 @@ Frontend:
 ```
 http://localhost:4200
 ```
+
+## Additional readme
+Other readme such as architectural design and user guide shall be found in
+[📄 Architectural README](Design/architecturalReadme.md)
+[📄 Reflection README](Design/architecturalReadme.md)
