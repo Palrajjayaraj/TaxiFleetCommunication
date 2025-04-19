@@ -1,6 +1,6 @@
 # Build stage
-FROM node:18 AS build
-WORKDIR /app
+FROM node:23-slim AS build
+WORKDIR /app/Sources
 COPY . .
 RUN npm install && npm run build
 

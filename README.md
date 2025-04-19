@@ -17,6 +17,12 @@ The software that implements the communication for a taxi fleet company which pr
 ---
 
 ## Folder Structure
+$ ./tree-md .
+# TaxiFleetCommunication
+.
+ * [Design](./tree-md)
+ * [dir2](./dir2)
+ * 
 /TaxiFleetCommunication
     ├── Design/ # Design documents and diagrams 
     ├── Requirements/ # Requirement specifications 
