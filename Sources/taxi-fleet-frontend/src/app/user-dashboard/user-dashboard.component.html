@@ -21,7 +21,7 @@
       <mat-form-field appearance="fill" class="form-field">
         <mat-label>Source</mat-label>
         <input type="text" matInput [formControl]="pickupLocControl" [matAutocomplete]="sourceAuto"
-          (blur)="validateSelected(pickupLocControl)">>
+          (blur)="validateSelected(pickupLocControl)">
         <mat-autocomplete #sourceAuto="matAutocomplete" [displayWith]="displayLocationName">
           <mat-option *ngFor="let location of filteredSources | async" [value]="location">
             {{ location.readableName }}
@@ -33,7 +33,7 @@
       <mat-form-field appearance="fill" class="form-field">
         <mat-label>Destination</mat-label>
         <input type="text" matInput [formControl]="dropOffLocControl" [matAutocomplete]="destAuto"
-          (blur)="validateSelected(dropOffLocControl)">>
+          (blur)="validateSelected(dropOffLocControl)">
         <mat-autocomplete #destAuto="matAutocomplete" [displayWith]="displayLocationName">
           <mat-option *ngFor="let location of filteredDestinations | async" [value]="location">
             {{ location.readableName }}
