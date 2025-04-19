@@ -51,4 +51,6 @@ Other readme such as architectural design and user guide shall be found in
 
 [📄 Architectural README](Design/architecturalReadme.md)
 
+[📄 User Guide](UserGuide/userGuide.md)
+
 [📄 Reflection README](reflectionReadme.md)

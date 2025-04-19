@@ -1,12 +1,12 @@
 # User Guide
 
-This is a role-based application that supports three types of users. Each role provides a specific set of features tailored to its purpose:
+This is a role-based application that supports three types of users. Each role provides a specific set of features:
 
     User: Regular users who want to book a taxi.
 
     Taxi: Taxi drivers who can view and respond to booking requests.
 
-    Admin: Administrators who can monitor system activities and booking reports.
+    Admin: Administrators who can monitor taxi activities and booking reports.
 
 ## Accessing the Application
 
@@ -25,7 +25,7 @@ As shown in the screenshot below, after selecting the User role, the application
 
 ![Login Select Roles Screenshot](login_select_roles.png)
 
-Choose any User ID from the dropdown menu and click Login to access the User Dashboard for booking a taxi.
+Choose your User ID from the dropdown menu and click Login to access the User Dashboard for booking a taxi.
 
 ## User Dashboard
 
@@ -61,7 +61,7 @@ The dashboard will then update to show:
 
     Drop-off location
 
-    Assigned Taxi with Taxi no plate
+    Assigned Taxi with Taxi number plate
 
 This indicates that your booking has been successfully confirmed and a taxi is on the way.
 
@@ -75,25 +75,13 @@ To access the Taxi Dashboard, start from the login page and follow these steps:
 
     Select the Taxi role from the role dropdown.
 
-    Choose an appropriate Taxi ID from the list.
+    Choose your Taxi ID from the list.
 
     Click Login to proceed.
 
-As shown in the screenshots below, this will log the selected taxi user into the application and load the Taxi Dashboard.
-
 ![Taxi Dashboard Login Screenshot](taxi_dashboard_login.png)
 
-After logging in with a Taxi ID, the Taxi Dashboard will be displayed, as shown in the screenshot below.
-
-The dashboard provides key information for the taxi driver:
-
-    Taxi ID: Displays the registered taxi number (e.g., TN 01 AA 1244).
-
-    Location: Shows the current location of the taxi.
-
-    Status: Indicates whether the taxi is currently ONLINE or AVAILABLE or BOOKED or RIDING.
-
-    Current Booking: Displays the current booking details, if any. If there is no active booking, it will show No current booking.
+Once logged in, Taxi Dashboard would be loaded.
 
 ![Taxi Dashboard Screenshot](taxi_dashboard.png)
 
@@ -103,10 +91,7 @@ To take a new ride, the taxi user must follow these steps:
 
     Once a booking request is received, the request details will appear on the dashboard.
 
-    Review the pickup and drop-off locations.
-
-    Click Accept to confirm the ride and proceed with the booking.
-
+    Click Accept to confirm the ride and proceed with the booking or reject to wait new booking request.
 
 ![Taxi Incoming Booking Request Screenshot](taxi_incoming_booking_request.png)
 
@@ -129,7 +114,7 @@ To access the Admin Dashboard, start from the login page and follow these steps:
 
     Select the Admin role from the role dropdown.
 
-    Choose an appropriate User ID from the list.
+    Choose your ID from the list.
 
     Click Login to proceed.
 
@@ -137,8 +122,7 @@ As shown in the screenshots below, this will log the selected admin user into th
 
 ![Admin Dashboard Login Screenshot](admin_dashboard_login.png)
 
-After logging in with a Admin User ID, the Admin Dashboard will be displayed with 3 types of reports, as shown in the screenshot below.
-
+The Admin Dashboard will be displayed with 3 types of reports, as shown in the screenshot below.
 
     1.Taxi Status
 
