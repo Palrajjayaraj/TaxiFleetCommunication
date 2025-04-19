@@ -1,0 +1,35 @@
+@startuml LayeredArchitecture
+
+package "Web Layer" {
+    [management-webapp]
+}
+
+package "Models" {
+    [user]
+    [taxi]
+    [common]
+}
+
+package "System Layer" {
+    [system]
+    [user]
+    [taxi]
+    [common]
+}
+
+package "Persistence Layer" {
+    [persistence]
+    [PostgresDB]
+}
+
+[management-webapp] --> [system]
+[taxi-fleet-frontend] --> [management-webapp]
+
+[system] --> [user]
+[system] --> [taxi]
+[user] --> [common]
+[taxi] --> [common]
+[system] --> [persistence]
+[persistence] --> [PostgresDB]
+
+@enduml
