@@ -21,6 +21,7 @@ import { TaxiService } from '../services/taxi.service';
 import { TaxiBookingEventsService } from '../services/taxi.sse.service';
 import { Booking } from '../model/booking.model';
 import { BehaviorSubject } from 'rxjs/internal/BehaviorSubject';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-taxi-dashboard',
@@ -55,6 +56,7 @@ export class TaxiDashboardComponent implements OnInit {
   currentBooking$: BehaviorSubject<Booking | null> = new BehaviorSubject<Booking | null>(null);
 
   constructor(
+    private router: Router,
     private commonService: CommonService,
     private stateService: StateService,
     private taxiService: TaxiService,
@@ -67,6 +69,10 @@ export class TaxiDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedInTaxi = this.stateService.currentEntity as Taxi;
+    if (!this.loggedInTaxi) {
+      alert('Redirecting to Login Page ...')
+      this.router.navigate(['login']);
+    }
     this.locationControl.setValue(this.loggedInTaxi.currentLocation);
     this.statusControl.setValue(this.loggedInTaxi.currentStatus);
     this.addListeners();

@@ -57,6 +57,10 @@ export class UserDashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.loggedInUser = this.stateService.currentEntity as User;
+    if (!this.loggedInUser) {
+      alert('Redirecting to Login Page ...')
+      this.router.navigate(['login']);
+    }
     this.locationService.getLocations().subscribe(locations => {
       this.allLocations = locations;
       this.filteredSources = this.pickupLocControl.valueChanges.pipe(
@@ -98,6 +102,10 @@ export class UserDashboardComponent implements OnInit {
     const dropOffLoc = this.dropOffLocControl.value;
     if (!pickUpLoc || !dropOffLoc) {
       alert('Please select valid Pickup and Drop off location.');
+      return;
+    }
+    if(pickUpLoc === dropOffLoc){
+      alert('Pickup and Drop off locations cannot be same.');
       return;
     }
     const request = new UserBookingRequest(this.loggedInUser.uuid, new Date(), pickUpLoc, dropOffLoc);
