@@ -1,0 +1,439 @@
+@startuml TaxiFleetFullDiagram
+skinparam classAttributeIconSize 0
+interface ITaxiInfo {
+}
+interface IUniqueIdentifiable {
+}
+class TaxiFleetException {
+}
+interface ThrowingRunnable {
+  throws TaxiFleetException
+}
+interface ThrowingSupplier {
+  throws TaxiFleetException
+}
+class Booking {
+  String uuid
+  BookingRequest request
+  ITaxiInfo taxi
+  LocalDateTime bookConfirmedTime
+  Status status
+  return uuid
+  return request
+  return taxi
+  return bookConfirmedTime
+  return status
+  return ride
+  Ride ride
+}
+class BookingRequest {
+  UUID uuid
+  UUID userId
+  LocalDateTime requestTime
+  Location pickupLocation
+  Location dropoffLocation
+  Status status
+  return uuid
+  return userId
+  return requestTime
+  return pickupLocation
+  return dropoffLocation
+}
+class Ride {
+  UUID id
+  Booking booking
+  LocalDateTime startTime
+  LocalDateTime endTime
+  return endTime
+  return id
+  return booking
+  return startTime
+}
+interface IRunnable {
+  throws TaxiFleetException
+}
+class LockRunner {
+  ReadWriteLock lock
+}
+class ValidationException {
+}
+enum Severity {
+}
+class BookingRequestTest {
+}
+class BookingTest {
+}
+class LockRunnerTest {
+  Lock mockReadLock
+  Lock mockWriteLock
+  LockRunner lockRunner
+}
+class LocationTest {
+}
+class TaxiWebApplication {
+  TaxiFleetManagementServicesFacade managementService
+}
+class WebConfig {
+}
+class BookingController {
+  BookingService bookingService
+}
+class CommonController {
+  CommonService commonService
+}
+class ReportController {
+  ReportsService reportsService
+}
+class SafeRunner {
+}
+class TaxiController {
+  TaxiService service
+}
+class BookingRequestMapper {
+}
+interface that {
+  throws TaxiFleetException
+}
+interface TaxiMapper {
+  throws ValidationException
+}
+class TaxiPayload {
+  String id
+  String numberPlate
+  TaxiStatus currentStatus
+  Location currentLocation
+  return id
+  return numberPlate
+  return currentStatus
+  return currentLocation
+}
+class TaxiResponsePayload {
+  UUID taxiID
+  UUID requestID
+  TaxiResponse response
+  return taxiID
+  return requestID
+  return response
+}
+class BookingService {
+  TaxiFleetManagementServicesFacade managementService
+}
+class CommonService {
+}
+class ReportsService {
+  CommonService commonService
+  return trends
+  return trends
+}
+class TaxiFleetManagementServicesFacade {
+  return management
+}
+class TaxiService {
+}
+class AbstractSseService {
+  return emitter
+}
+class SSEBookingNotifier {
+  TaxiSSEService taxiSseService
+  UserSSEService userSseService
+  TaxiFleetManagementServicesFacade facade
+}
+class SseBookingRequestNotifier {
+  TaxiSSEService sseService
+  TaxiFleetManagementServicesFacade facade
+}
+class TaxiSSEController {
+  TaxiSSEService sseService
+}
+class TaxiSSEService {
+}
+class UserSSEController {
+  UserSSEService sseService
+}
+class UserSSEService {
+}
+class TaxiMapperImpl {
+  return null
+  return taxi
+  return null
+  return taxiEntity
+  return null
+  return location
+  return null
+  return locationEntity
+}
+class AppliationInitializationEntity {
+  String value
+  return value
+}
+class BookingEntity {
+  String uuid
+  BookingRequestEntity request
+  TaxiEntity taxi
+  LocalDateTime bookConfirmedTime
+  Status status
+  return uuid
+  return request
+  return taxi
+  return bookConfirmedTime
+  return status
+}
+class BookingRequestEntity {
+  UUID uuid
+  UUID userId
+  LocalDateTime requestTime
+  LocationEntity pickupLocation
+  LocationEntity dropoffLocation
+  Status status
+  return uuid
+  return userId
+  return requestTime
+  return pickupLocation
+  return dropoffLocation
+  return status
+}
+class LocationEntity {
+  int id
+  double latitude
+  double longitude
+  String readableName
+  return id
+  return latitude
+  return longitude
+  return readableName
+}
+class TaxiEntity {
+  UUID id
+  String numberPlate
+  TaxiStatus currentStatus
+  LocationEntity currentLocation
+  return id
+  return numberPlate
+  return currentLocation
+  return currentStatus
+}
+class UserEntity {
+  UUID uuid
+  String name
+  return uuid
+  return name
+}
+class AbstractRepository {
+}
+class AppliationInitializationRepository {
+  Session session
+}
+class BookingRepository {
+  return null
+}
+class BookingRequestRepository {
+  return null
+}
+class LocationRepository {
+}
+class PersistenceServiceImpl {
+}
+class SessionFactoryProvider {
+}
+class TaxiRepository {
+  return null
+}
+class UserRepository {
+}
+class BookingInitializer {
+}
+class BookingRequestInitializer {
+}
+class DataInitializer {
+}
+interface which {
+}
+class LocationsInitializer {
+}
+class TaxiInitializer {
+  < NO_OF_TAXIS
+}
+class UserDetailsInitializer {
+}
+interface BookingMapper {
+}
+interface BookingRequestsMapper {
+}
+interface LocationMapper {
+}
+interface UserMapper {
+}
+class BookingMapperImpl {
+}
+class BookingRequestsMapperImpl {
+  return null
+  return bookingRequestEntity
+  return null
+  return locationEntity
+}
+class LocationMapperImpl {
+  return null
+  return location
+}
+class UserMapperImpl {
+  return null
+  return user
+}
+class BookingManager {
+}
+interface IPersistenceServiceConsumer {
+}
+class LocationManager {
+}
+class TaxiFleetManagement {
+}
+class TaxiManager {
+}
+class UserManager {
+}
+class BookingRequestsManager {
+  TaxiFleetManagement managementSystem
+  return null
+  return currentBatch
+}
+class CommunicationService {
+  return null
+}
+interface IInternalBookingRequestNotifier {
+}
+class AvailableTaxiFilter {
+}
+class BookingDateTimeRangeFilter {
+}
+class DateTimeRangeFilter {
+  LocalDateTime startDateTime
+  LocalDateTime endDateTime
+}
+interface IFilter {
+}
+interface IBookingListener {
+}
+interface IBookingRequestNotifier {
+}
+interface IPersistenceService {
+}
+class PersistenceServiceProvider {
+  Optional<IPersistenceService> service
+}
+class for {
+  LocalDateTime timestamp
+  return timestamp
+}
+class Taxi {
+  UUID id
+  String numberPlate
+  TaxiState state
+  return id
+  return numberPlate
+}
+class TaxiState {
+  TaxiStatus status
+  Location location
+  return status
+  return location
+}
+class TaxiStatusValidator {
+  TaxiStatus currentStatus
+  TaxiStatus newStatus
+}
+class TaxiStateTest {
+  TaxiStatus currentStatus
+  TaxiStatus newStatus
+  boolean shouldPass
+}
+class TaxiStatusValidatorTest {
+  TaxiStatus currentStatus
+  TaxiStatus newStatus
+  boolean expectedValidTransition
+  String validationErrorMessage
+}
+class TaxiTest {
+}
+class User {
+  UUID uuid
+  return uuid
+  return name
+  String name
+}
+AbstractSseService --> return
+AppliationInitializationEntity --> return
+AppliationInitializationRepository --> Session
+Booking --> BookingRequest
+Booking --> ITaxiInfo
+Booking --> Ride
+Booking --> Status
+Booking --> return
+BookingController --> BookingService
+BookingEntity --> BookingRequestEntity
+BookingEntity --> Status
+BookingEntity --> TaxiEntity
+BookingEntity --> return
+BookingRepository --> return
+BookingRequest --> Location
+BookingRequest --> Status
+BookingRequest --> return
+BookingRequestEntity --> LocationEntity
+BookingRequestEntity --> Status
+BookingRequestEntity --> return
+BookingRequestRepository --> return
+BookingRequestsManager --> TaxiFleetManagement
+BookingRequestsManager --> return
+BookingRequestsMapperImpl --> return
+BookingService --> TaxiFleetManagementServicesFacade
+CommonController --> CommonService
+CommunicationService --> return
+IRunnable --> throws
+LocationEntity --> return
+LocationMapperImpl --> return
+LockRunner --> ReadWriteLock
+LockRunnerTest --> Lock
+LockRunnerTest --> LockRunner
+PersistenceServiceProvider --> Optional<IPersistenceService>
+ReportController --> ReportsService
+ReportsService --> CommonService
+ReportsService --> return
+Ride --> Booking
+Ride --> return
+SSEBookingNotifier --> TaxiFleetManagementServicesFacade
+SSEBookingNotifier --> TaxiSSEService
+SSEBookingNotifier --> UserSSEService
+SseBookingRequestNotifier --> TaxiFleetManagementServicesFacade
+SseBookingRequestNotifier --> TaxiSSEService
+Taxi --> TaxiState
+Taxi --> return
+TaxiController --> TaxiService
+TaxiEntity --> LocationEntity
+TaxiEntity --> TaxiStatus
+TaxiEntity --> return
+TaxiFleetManagementServicesFacade --> return
+TaxiInitializer --> <
+TaxiMapper --> throws
+TaxiMapperImpl --> return
+TaxiPayload --> Location
+TaxiPayload --> TaxiStatus
+TaxiPayload --> return
+TaxiRepository --> return
+TaxiResponsePayload --> TaxiResponse
+TaxiResponsePayload --> return
+TaxiSSEController --> TaxiSSEService
+TaxiState --> Location
+TaxiState --> TaxiStatus
+TaxiState --> return
+TaxiStateTest --> TaxiStatus
+TaxiStatusValidator --> TaxiStatus
+TaxiStatusValidatorTest --> TaxiStatus
+TaxiWebApplication --> TaxiFleetManagementServicesFacade
+ThrowingRunnable --> throws
+ThrowingSupplier --> throws
+User --> return
+UserEntity --> return
+UserMapperImpl --> return
+UserSSEController --> UserSSEService
+for --> return
+that --> throws
+@enduml
