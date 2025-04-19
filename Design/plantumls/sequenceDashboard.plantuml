@@ -8,38 +8,17 @@ participant "TaxiFleet" as TaxiFleet
 participant "PersistenceService" as PersistenceService
 
 
-== Initial UI Rendering ==
-
 FleetTeam -> Dashboard : renderInitialDashboard()
-Dashboard -> DashboardService : generateBookingStats(filters)
-DashboardService -> BookingCenter : queryBooking(filters)
-BookingCenter -> PersistenceService : getBookings(filters)
+Dashboard -> DashboardService : generateBookingStats()
+DashboardService -> BookingCenter : queryBooking()
+BookingCenter -> PersistenceService : getAllBookings()
 PersistenceService -> BookingCenter : Collection<Booking>
 BookingCenter -> DashboardService : Collection<Booking>
 DashboardService -> Dashboard : displayBookingStats(Collection<Booking>)
 
-Dashboard -> DashboardService : generateTaxiStats(filters)
-DashboardService -> TaxiFleet : queryTaxis(filters)
-TaxiFleet -> PersistenceService : getTaxis(filters)
+Dashboard -> DashboardService : generateTaxiStats()
+DashboardService -> TaxiFleet : queryTaxis()
+TaxiFleet -> PersistenceService : getAllTaxis()
 PersistenceService -> TaxiFleet : Collection<Taxi>
 TaxiFleet -> DashboardService : Collection<Taxi>
 DashboardService -> Dashboard : displayTaxiStats(Collection<Taxi>)
-
-== Fleet Management Updates Filters ==
-
-FleetTeam -> Dashboard : updatesFilters(newFilters)
-Dashboard -> DashboardService : generateBookingStats(filters)
-DashboardService -> BookingCenter : queryBooking(filters)
-BookingCenter -> PersistenceService : getBookings(filters)
-PersistenceService -> BookingCenter : Collection<Booking>
-BookingCenter -> DashboardService : Collection<Booking>
-DashboardService -> Dashboard : displayBookingStats(Collection<Booking>)
-
-Dashboard -> DashboardService : generateTaxiStats(filters)
-DashboardService -> TaxiFleet : queryTaxis(filters)
-TaxiFleet -> PersistenceService : getTaxis(filters)
-PersistenceService -> TaxiFleet : Collection<Taxi>
-TaxiFleet -> DashboardService : Collection<Taxi>
-DashboardService -> Dashboard : displayTaxiStats(Collection<Taxi>)
-
-@enduml
